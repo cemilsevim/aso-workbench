@@ -1,0 +1,36 @@
+# Changelog
+
+All notable changes are listed here, newest first. Versions follow [Semantic Versioning](https://semver.org):
+**major** for changes that break your data or workflow, **minor** for new features, **patch** for fixes.
+The in-app updater shows the section of the new version as its release notes.
+
+## [1.0.0] - 2026-09-22
+
+First public release.
+
+### Track
+- Rank tracking per country and device from public App Store search (top 200), with gaps shown as gaps.
+- Rank history chart with release and change markers; Δ against the last release, the previous or first measurement, or 7 days ago.
+- Automatic release detection and a timeline of releases, applied metadata changes and your own notes, with a value-weighted before/after report.
+- Ratings per storefront over time and written reviews from Apple's public feed.
+
+### Research
+- Popularity in layers: Apple's monthly Search Term Rank lists, the optional Apple Ads website index, and a bundled model estimate for everything else.
+- Difficulty (0–100) from the top ten public results, with every component shown.
+- Golden keywords, relevance ("Fit") and brand detection, competitor keyword import, autocomplete ideas.
+- Try your keywords in other countries, including AI-suggested local-language forms, and track the winners in one click.
+
+### Write and publish
+- AI metadata writer ranked by winnable keywords first, "Make better", write all locales, What's New for every language.
+- Rule engine for title, subtitle and keyword field (no filler, no repeats, room used), per storefront.
+- Publish to App Store Connect: create missing languages, copy screenshots, create the next version, re-read after writing.
+- Legal footer (Terms of Use and Privacy Policy) added to every description automatically.
+
+### Measure
+- Your Apple Ads campaign results per keyword and country.
+- MRR and subscriptions from RevenueCat.
+
+### App
+- New name: ASO Workbench (early private builds were called ASO Studio; their data folder and settings move over automatically on first launch).
+- Update checker for new GitHub releases; automatic data backup before a new version first opens the data.
+- Clear connection guide: what each key unlocks, where data goes, how to get it.

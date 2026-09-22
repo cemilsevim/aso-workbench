@@ -1,0 +1,28 @@
+# Build output
+.build/
+build/
+dist/
+DerivedData/
+.swiftpm/
+*.xcodeproj
+*.xcworkspace
+
+# Secrets — never commit keys, sessions or personal data
+.env
+.env.*
+*.p8
+*.pem
+*.p12
+*.key
+credentials.json
+
+# Local app data (lives in ~/Library/Application Support/ASO Workbench, but just in case)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+app.log
+
+# Private notes kept next to the project
+docs/private/
+
+.DS_Store

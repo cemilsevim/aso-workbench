@@ -1,0 +1,18 @@
+import Testing
+import ASOCore
+
+@Suite("Phrase coverage (same rule the writer and the Metadata panel use)")
+struct PhraseCoverageTests {
+    func covers(_ f: MetadataFields, _ phrase: String) -> Bool {
+        let words = Set(ASORules.words(f.name) + ASORules.words(f.subtitle) + ASORules.words(f.keywords))
+        return ASORules.words(phrase).allSatisfy { w in words.contains(w) || words.contains(w + "s") || (w.hasSuffix("s") && words.contains(String(w.dropLast()))) }
+    }
+
+    @Test func wordsAcrossFieldsCount() {
+        let f = MetadataFields(name: "Inkwave: Manga Comic Maker", subtitle: "Selfie to Webtoon Hero", keywords: "avatar,manhwa,generator")
+        #expect(covers(f, "comic maker"))
+        #expect(covers(f, "manga generator"))      // words from two different fields
+        #expect(covers(f, "comics"))               // plural twin of a title word
+        #expect(!covers(f, "comic reader"))        // "reader" nowhere
+    }
+}
