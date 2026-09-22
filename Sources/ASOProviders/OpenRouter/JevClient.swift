@@ -57,7 +57,7 @@ public actor JevClient {
         let questions: [String: Any] = [
             "fit": ["type": "noul", "instructions": "Would a person who searched `search_term` be looking for an app like `app_name` (see `app_description`)?",
                     "criteria": ["true": "The term names what this app does, a feature it has, or a need it serves; the searcher would consider installing it.",
-                                 "false": "The searcher wants something this app does not do — a different function, another company's product, or an unrelated topic — even if some words overlap."]],
+                                 "false": "The searcher wants something this app does not do, a different function, another company's product, or an unrelated topic, even if some words overlap."]],
         ]
         let answers = try await ask(key: key, state: state, questions: questions)
         guard let v = (answers["fit"] as? [String: Any])?["noul"] as? Double else { throw ASOError.decoding(service: "OpenRouter", detail: "No fit answer.") }
@@ -90,8 +90,8 @@ public actor JevClient {
         ]
         let questions: [String: Any] = [
             "navigational": ["type": "noul", "instructions": "Is `search_term` a way of finding one specific existing app or company product (see `top_results`), rather than a generic need any app could serve?",
-                             "criteria": ["true": "The term is, contains, or misspells the name of a specific app, company or product — e.g. 'koupon app amazon' (Koupon), 'when i work' (When I Work), 'my chart app' (MyChart).",
-                                          "false": "A generic description of a need, task or content type — e.g. 'calorie tracker', 'white noise', 'invoice maker' — even if the top result happens to carry those words."]],
+                             "criteria": ["true": "The term is, contains, or misspells the name of a specific app, company or product, e.g. 'koupon app amazon' (Koupon), 'when i work' (When I Work), 'my chart app' (MyChart).",
+                                          "false": "A generic description of a need, task or content type, e.g. 'calorie tracker', 'white noise', 'invoice maker', even if the top result happens to carry those words."]],
         ]
         let answers = try await ask(key: key, state: state, questions: questions)
         guard let v = (answers["navigational"] as? [String: Any])?["noul"] as? Double else { throw ASOError.decoding(service: "OpenRouter", detail: "No navigational answer.") }

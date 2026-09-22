@@ -201,7 +201,7 @@ final class TrackedKeyword {
         return leader.trackID == own.trackID || (!own.sellerName.isEmpty && leader.sellerName == own.sellerName)
     }
 
-    /// The term is our own name ("acme notes" for Acme Notes): a brand, but ours — always worth ranking for.
+    /// The term is our own name ("acme notes" for Acme Notes): a brand, but ours, always worth ranking for.
     var isOwnBrandTerm: Bool {
         guard let own = market?.app else { return false }
         return TitleMatch.namesAlign(leader: own.name, term: text)
@@ -223,7 +223,7 @@ final class TrackedKeyword {
         return (brandProbability ?? 0) >= 0.5 || (navigational ?? 0) >= 0.6 || leaderOwnsTerm
     }
 
-    /// Demand, competition and brand checks pass — regardless of whether the term fits this app.
+    /// Demand, competition and brand checks pass, regardless of whether the term fits this app.
     func passesGoldenNumbers(minPopularity: Int, maxDifficulty: Int) -> Bool {
         guard let p = latestPopularity?.popularity1to100, p >= minPopularity, let d = difficultyScore, d.score <= Double(maxDifficulty) else { return false }
         return !isBrandLike
@@ -242,7 +242,7 @@ final class TrackedKeyword {
         passesGoldenNumbers(minPopularity: minPopularity, maxDifficulty: maxDifficulty) && (fitProbability ?? 1) >= 0.5
     }
 
-    /// The numbers pass but the term is not what this app does — a lead for a different app, not a keyword for this one.
+    /// The numbers pass but the term is not what this app does, a lead for a different app, not a keyword for this one.
     func isGoldenLead(minPopularity: Int, maxDifficulty: Int) -> Bool {
         passesGoldenNumbers(minPopularity: minPopularity, maxDifficulty: maxDifficulty) && (fitProbability ?? 1) < 0.5
     }
@@ -308,7 +308,7 @@ final class PopularityObservation {
     var popularity1to5: Int?
     var popularityInGenre: Int?
     var rankInGenre: Int?
-    /// True when the query ran but Apple had no record for this term — stored so
+    /// True when the query ran but Apple had no record for this term, stored so
     /// "no data" is a first-class observation rather than an absence.
     var noRecord: Bool
     /// True when all genres were searched (so "no record" means absent from every dataset).
@@ -346,7 +346,7 @@ final class PopularityObservation {
     /// Confidence 0–1 for scope "estimate" (peak probability of the predicted band).
     var estimateConfidence: Double?
     /// For terms Apple leaves at the floor (index 5 or "below range"): the model's 6–29 demand rank among floor terms.
-    /// Ordering only — Apple publishes nothing between 6 and 31.
+    /// Ordering only: Apple publishes nothing between 6 and 31.
     var subFloorEstimate: Int?
     var subFloorProbability: Double?
 
@@ -528,7 +528,7 @@ final class IdeaCandidate {
     var measuredAt: Date?
     var updatedAt: Date
     var note: String = ""
-    /// From the results: the top app carries the term's name and dominates — a navigational search for that app.
+    /// From the results: the top app carries the term's name and dominates, a navigational search for that app.
     var leaderOwnsTerm: Bool?
     /// From the results: a single word that eight or more small apps already carry in their names (a name, not a need).
     var nameCrowd: Bool?

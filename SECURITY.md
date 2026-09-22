@@ -8,7 +8,7 @@ The networking layer refuses any request to a host that is not on its allow-list
 
 | Host | When | What is sent |
 |---|---|---|
-| `itunes.apple.com` | Always (no key) | Search terms, app IDs, country — public App Store search, lookup and reviews |
+| `itunes.apple.com` | Always (no key) | Search terms, app IDs and country (public App Store search, lookup and reviews) |
 | `search.itunes.apple.com` | Always (no key) | Autocomplete prefixes |
 | `appleid.apple.com`, `api.ads.apple.com`, `api.searchads.apple.com` | Apple Ads key set | A token signed on your Mac; search terms; read-only report queries |
 | `app-ads.apple.com` | Only after you sign in to the Apple Ads website session | Your own browser session, inside an in-app browser |

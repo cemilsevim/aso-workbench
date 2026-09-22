@@ -34,7 +34,7 @@ struct AdsCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     if let m = env.adsImport.lastMessage { Text(m).font(.callout).foregroundStyle(.secondary).lineLimit(2) }
-                    else { Text("Your own campaign results — the ground truth for demand and cost per storefront. Sync reads the last 30 days for every tracked app.").font(.callout).foregroundStyle(.secondary) }
+                    else { Text("Your own campaign results: the ground truth for demand and cost per storefront. Sync reads the last 30 days for every tracked app.").font(.callout).foregroundStyle(.secondary) }
                     Spacer()
                     if env.adsImport.isSyncing { ProgressView().controlSize(.small) }
                     else {

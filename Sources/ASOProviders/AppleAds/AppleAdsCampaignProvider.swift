@@ -1,7 +1,7 @@
 import Foundation
 import ASOCore
 
-/// Apple Ads Campaign Management API (v5): the advertiser's own campaigns and keyword reports — spend, taps, installs,
+/// Apple Ads Campaign Management API (v5): the advertiser's own campaigns and keyword reports, spend, taps, installs,
 /// conversion and bid recommendations per keyword and storefront. Same OAuth client as the Platform API.
 public actor AppleAdsCampaignProvider {
     public struct Campaign: Sendable, Identifiable, Hashable {

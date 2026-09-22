@@ -2,7 +2,7 @@ import Foundation
 import ASOCore
 
 /// Public customer-reviews feed (`itunes.apple.com/<cc>/rss/customerreviews/…`). No authentication; newest 50 per
-/// storefront per page. Only written reviews appear here — ratings without text are counted by the lookup API instead.
+/// storefront per page. Only written reviews appear here, ratings without text are counted by the lookup API instead.
 public struct AppReviewsProvider: Sendable {
     private let http = HTTPClient(serviceName: "App Store reviews", allowedHosts: ["itunes.apple.com"])
     private let pacer: RequestPacer

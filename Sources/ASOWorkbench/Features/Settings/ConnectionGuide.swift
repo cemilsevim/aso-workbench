@@ -39,7 +39,7 @@ struct ConnectionHeader<Status: View>: View {
     }
 }
 
-/// What a key unlocks, why it is asked for, where data goes, and how to get it — shown above the fields.
+/// What a key unlocks, why it is asked for, where data goes, and how to get it, shown above the fields.
 struct ConnectionIntro: View {
     let unlocks: [String]
     let dataFlow: String

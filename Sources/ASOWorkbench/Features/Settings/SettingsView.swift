@@ -88,7 +88,7 @@ struct ConnectionsSettings: View {
                     dataFlow: "Signs a short-lived token on this Mac and talks only to api.appstoreconnect.apple.com. Nothing is written until you press Apply and confirm; nothing is ever submitted for review.",
                     steps: ["Open App Store Connect → **Users and Access → Integrations → App Store Connect API → Team Keys**.",
                             "Generate a key with the **App Manager** role (needed to write metadata; Developer is enough for read-only).",
-                            "Download the **.p8** file — Apple lets you download it only once — and copy the **Key ID** and the **Issuer ID** shown above the table.",
+                            "Download the **.p8** file: Apple lets you download it only once, and copy the **Key ID** and the **Issuer ID** shown above the table.",
                             "Here: fill Key ID and Issuer ID, choose the .p8 file, press Save. Individual keys are not supported."],
                     link: ("Open App Store Connect", "https://appstoreconnect.apple.com/access/integrations/api"))
                 TextField("Key ID", text: $ascKeyID, prompt: Text("e.g. 2X9R4HXF34"))
@@ -114,7 +114,7 @@ struct ConnectionsSettings: View {
                     unlocks: ["AI metadata writer, Make better, Write all locales and What's New translations",
                               "Local-language keyword ideas when trying keywords in other countries",
                               "Brand, relevance and \"is this an app?\" checks behind Golden keywords and Fit"],
-                    dataFlow: "Pay-as-you-go on your own OpenRouter account (typical: a listing ≈ $0.003 with DeepSeek, a keyword check ≈ $0.00003). Sends keyword text, your app's public name and description and your drafts to openrouter.ai — never your keys or data file.",
+                    dataFlow: "Pay-as-you-go on your own OpenRouter account (typical: a listing ≈ $0.003 with DeepSeek, a keyword check ≈ $0.00003). Sends keyword text, your app's public name and description and your drafts to openrouter.ai, never your keys or data file.",
                     steps: ["Create an account at openrouter.ai and add a little credit ($5 lasts a long time).",
                             "**Keys → Create key**; optionally set a spending limit on the key.",
                             "Paste the key (starts with `sk-or-v1-`) here and press Save."],
@@ -293,7 +293,7 @@ struct ConnectionsSettings: View {
         var parts: [String] = []
         for (name, value) in ids {
             let clean = value.strippedIdentifier
-            parts.append(clean == value ? "\(name) \(value.count) chars" : "\(name) has \(value.count - clean.count) invisible/whitespace character(s) — Save strips them")
+            parts.append(clean == value ? "\(name) \(value.count) chars" : "\(name) has \(value.count - clean.count) invisible/whitespace character(s): Save strips them")
         }
         if !pem.isEmpty {
             if let signer = try? ES256Signer(pem: pem) {
@@ -354,7 +354,7 @@ struct GeneralSettings: View {
                     Image(nsImage: NSApp.applicationIconImage).resizable().frame(width: 56, height: 56)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("ASO Workbench").font(.title3.weight(.semibold))
-                        Text("App Store Optimization on your Mac — with honest numbers.").font(.caption).foregroundStyle(.secondary)
+                        Text("App Store Optimization on your Mac, with honest numbers.").font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 LabeledContent("Version") { Text("\(AppInfo.version) (\(AppInfo.build))").monospacedDigit().textSelection(.enabled) }

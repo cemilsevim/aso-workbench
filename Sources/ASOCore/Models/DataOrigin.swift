@@ -1,6 +1,6 @@
 import Foundation
 
-/// Where a number came from. Never collapse these into a single "score" — the
+/// Where a number came from. Never collapse these into a single "score", the
 /// research plan requires the origin to be visible next to every metric.
 public enum DataOrigin: String, Sendable, Codable, CaseIterable {
     /// Apple's own API (Apple Ads Platform API v1, App Store Connect).

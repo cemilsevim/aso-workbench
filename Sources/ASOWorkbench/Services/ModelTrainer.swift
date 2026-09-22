@@ -17,7 +17,7 @@ final class ModelTrainer {
         var featureGroups: [String]
         var random: EvaluationReport
         var crossStorefront: EvaluationReport?
-        /// Holdout drawn only from rows that carry autocomplete features — the shape every row has at inference time.
+        /// Holdout drawn only from rows that carry autocomplete features, the shape every row has at inference time.
         var inferenceLike: EvaluationReport?
         /// Train without one Apple genre's terms, test on them: how well the rule transfers to an unseen topic.
         var crossGenre: [EvaluationReport] = []
@@ -211,8 +211,8 @@ final class ModelTrainer {
             cross = EvaluationReport(name: "Held-out storefront \(held.key)", actual: held.value.map(\.label), predicted: try twoStage(classifier: c, regressor: r, held.value).values)
         }
 
-        // Cross-genre: hold out a whole topic — the genre's list terms plus every other term Jev assigns to that
-        // genre — so the held-out set spans the full range (list terms alone are all ≥40 and would flatter nothing).
+        // Cross-genre: hold out a whole topic, the genre's list terms plus every other term Jev assigns to that
+        // genre: so the held-out set spans the full range (list terms alone are all ≥40 and would flatter nothing).
         var crossGenre: [EvaluationReport] = []
         let topicOf: (Example) -> String = { $0.genre.isEmpty ? ($0.categorical.count > 1 ? $0.categorical[1] : "") : $0.genre }
         let byTopic = Dictionary(grouping: examples.filter { !topicOf($0).isEmpty && topicOf($0) != "unknown" }, by: topicOf)
@@ -278,7 +278,7 @@ final class PopularityEstimator {
     }
 
     /// 6–29 for a term Apple leaves at the floor: which of 24 probability slots it falls in among floor terms.
-    /// An ordering aid, not a popularity value — nil when the report carries no quantiles.
+    /// An ordering aid, not a popularity value, nil when the report carries no quantiles.
     func subFloorEstimate(publishedProbability p: Double) -> Int? {
         guard floorQuantiles.count == 23 else { return nil }
         return 6 + floorQuantiles.filter { $0 < p }.count

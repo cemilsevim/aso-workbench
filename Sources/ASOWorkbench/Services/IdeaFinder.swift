@@ -4,7 +4,7 @@ import ASOCore
 import ASOProviders
 
 /// App-independent gap finder: every term Apple publishes a popularity for in a country (its genre lists), minus
-/// brands and non-app searches (Jev), measured for difficulty (public search) — ranked by opportunity. A term with
+/// brands and non-app searches (Jev), measured for difficulty (public search): ranked by opportunity. A term with
 /// real demand and weak results is a lead for an app that does not exist yet.
 @Observable
 final class IdeaFinder {
@@ -192,7 +192,7 @@ final class IdeaFinder {
 
         let gaps = candidates.filter { $0.isGap(maxDifficulty: maxDifficulty) }.sorted { ($0.difficulty ?? 100) < ($1.difficulty ?? 100) }
         let unmeasured = queue.count - measured
-        lastMessage = "\(best.count) published terms in \(country) (\(added) new)\(listErrors > 0 ? ", \(listErrors) list(s) failed" : ""). Measured \(measured) this run, long-tail first; \(max(0, unmeasured)) candidates still unmeasured — scan again to continue. \(gaps.count) gap(s) so far (difficulty ≤ \(maxDifficulty))."
+        lastMessage = "\(best.count) published terms in \(country) (\(added) new)\(listErrors > 0 ? ", \(listErrors) list(s) failed" : ""). Measured \(measured) this run, long-tail first; \(max(0, unmeasured)) candidates still unmeasured, scan again to continue. \(gaps.count) gap(s) so far (difficulty ≤ \(maxDifficulty))."
         AppLog.write("[ideas] \(lastMessage ?? "")")
         for g in gaps.prefix(15) {
             AppLog.write("[ideas] gap \(g.term) pop=\(g.popularity) diff=\(Int((g.difficulty ?? 0).rounded())) opp=\(Int((g.opportunity ?? 0).rounded())) leader=\(g.leaderName ?? "-")/\(g.leaderRatings ?? 0) titles=\(g.titleMatches ?? -1)/10 appable=\(String(format: "%.2f", g.appable ?? -1))")

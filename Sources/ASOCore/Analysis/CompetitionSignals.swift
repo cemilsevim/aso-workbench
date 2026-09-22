@@ -7,7 +7,7 @@ public struct CompetitionSignals: Sendable, Hashable, Codable {
     public let medianRatingCountTop10: Int?
     /// How many of the top 10 have the query (case-insensitive) in their name.
     public let titleMatchesTop10: Int
-    /// Distinct sellers among the top 10 — low diversity means a few players dominate.
+    /// Distinct sellers among the top 10, low diversity means a few players dominate.
     public let distinctSellersTop10: Int
     /// Average star rating (rating-count weighted) of the top 10.
     public let weightedRatingTop10: Double?
@@ -48,7 +48,7 @@ public struct CompetitionSignals: Sendable, Hashable, Codable {
         difficulty = (try? c.decodeIfPresent(DifficultyScore.self, forKey: .difficulty)) ?? nil
     }
 
-    /// Coarse, human-readable band derived only from the median rating count — labelled as derived.
+    /// Coarse, human-readable band derived only from the median rating count, labelled as derived.
     public var ratingMassBand: String {
         guard let m = medianRatingCountTop10 else { return "—" }
         switch m {

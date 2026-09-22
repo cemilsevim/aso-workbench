@@ -74,7 +74,7 @@ public enum MetadataValidator {
         }
 
         // Exact word overlap with name / subtitle. Apple indexes those fields already,
-        // so a repeated exact word adds no new coverage. Only exact matches — no stemming.
+        // so a repeated exact word adds no new coverage. Only exact matches: no stemming.
         let titleWords = Set((fields.name + " " + fields.subtitle)
             .lowercased()
             .split(whereSeparator: { !$0.isLetter && !$0.isNumber })

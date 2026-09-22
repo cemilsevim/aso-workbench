@@ -4,7 +4,7 @@ import Foundation
 /// Privacy Policy links, labelled in the locale's language, plus an optional note. Deterministic, never written by a model.
 public enum LegalFooter {
     public static let appleStandardEULA = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-    static let separator = "———"
+    static let separator = ",,"
 
     /// (Terms of Use label, Privacy Policy label) per language; English for the rest.
     static let labels: [String: (String, String)] = [

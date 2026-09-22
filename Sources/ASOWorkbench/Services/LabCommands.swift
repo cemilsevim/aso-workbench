@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 import ASOCore
 
-/// `asoworkbench://lab/<action>?...` — lets the training pipeline be driven from a script while the app runs.
+/// `asoworkbench://lab/<action>?...`, lets the training pipeline be driven from a script while the app runs.
 /// Actions: status · probe(terms,sf) · universe(sf,genre,suggest,seeds) · label · hints(limit) · results(limit) · jev(limit) · train · export · cancel
 enum LabCommands {
     static func handle(_ url: URL, env: AppEnvironment, context: ModelContext, apps: [TrackedApp]) async {
@@ -62,7 +62,7 @@ enum LabCommands {
                 return env.trainer.lastError ?? "no report"
             }
         case "assistant":
-            // asoworkbench://lab/assistant?app=<trackID>&locale=en-US&brand=Comics%20AI — logs three rule-checked proposals.
+            // asoworkbench://lab/assistant?app=<trackID>&locale=en-US&brand=Comics%20AI: logs three rule-checked proposals.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first, let locale = AppLocale.parse(q["locale"] ?? "en-US") else { return }
             let market = app.sortedMarkets.first { $0.countryCode == (q["sf"] ?? "US") } ?? app.sortedMarkets.first
             let current = env.metadataService.draftFields(for: app, locale: locale)
@@ -87,7 +87,7 @@ enum LabCommands {
                 AppLog.write("[lab] discover \(c.golden(minPopularity: env.settings.goldenMinPopularity, maxDifficulty: env.settings.goldenMaxDifficulty) ? "★" : " ") \(c.term) pop=\(c.popularity.map(String.init) ?? "<\(c.upperBound ?? 40)") \(c.popularityScope ?? "") diff=\(c.difficulty.map { String($0.rounded) } ?? "-") brand=\(c.jevBrand.map { String(format: "%.2f", $0) } ?? "-") natural=\(c.jevNatural.map { String(format: "%.2f", $0) } ?? "-") src=\(c.sources.sorted().joined(separator: "+"))")
             }
         case "estimate":
-            // asoworkbench://lab/estimate?sf=US&terms=comic%20maker,manga%20reader — runs the model on ad-hoc terms and logs each estimate.
+            // asoworkbench://lab/estimate?sf=US&terms=comic%20maker,manga%20reader: runs the model on ad-hoc terms and logs each estimate.
             guard let sf = StorefrontRegistry.lookup(q["sf"] ?? "US") else { AppLog.write("[lab] estimate: unknown storefront"); return }
             let terms = (q["terms"] ?? "").split(separator: ",").map { String($0).trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
             AppLog.write("[lab] estimate model=\(env.models.estimator?.origin ?? "none") sf=\(sf.countryCode) terms=\(terms.count)")
@@ -101,7 +101,7 @@ enum LabCommands {
                 AppLog.write("[lab] estimate \(r.term): \(e) hints=\(r.features.ownHintCount)/\(r.features.firstWordHintCount)/\(r.features.prefixHintCount) pos=\(r.features.ownSelfPosition)/\(r.features.firstWordPosition)/\(r.features.prefixPosition) jev=\(r.jev.map { String(format: "brand %.2f demand %.2f", $0.brand, $0.demand) } ?? "-")")
             }
         case "fit":
-            // asoworkbench://lab/fit?app=<trackID>&sf=DE&force=1 — Jev fit for every tracked keyword of that market, logged.
+            // asoworkbench://lab/fit?app=<trackID>&sf=DE&force=1: Jev fit for every tracked keyword of that market, logged.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first,
                   let market = app.sortedMarkets.first(where: { $0.countryCode == (q["sf"] ?? "US") }) ?? app.sortedMarkets.first, let sf = market.storefront else { return }
             await env.research.classifyKeywords(market.keywords, app: app, storefront: sf, context: context, forceFit: q["force"] == "1")
@@ -110,11 +110,11 @@ enum LabCommands {
                 AppLog.write("[lab] fit \(k.text): \(k.fitProbability.map { String(format: "%.2f", $0) } ?? "-") nav=\(k.navigational.map { String(format: "%.2f", $0) } ?? "-") leaderOwns=\(k.leaderOwnsTerm) golden=\(k.isGolden(minPopularity: env.settings.goldenMinPopularity, maxDifficulty: env.settings.goldenMaxDifficulty)) lead=\(k.isGoldenLead(minPopularity: env.settings.goldenMinPopularity, maxDifficulty: env.settings.goldenMaxDifficulty))")
             }
         case "ideas":
-            // asoworkbench://lab/ideas?sf=US&genre=GAMES&budget=10&min=40 — app-gap scan, results logged as [ideas].
+            // asoworkbench://lab/ideas?sf=US&genre=GAMES&budget=10&min=40: app-gap scan, results logged as [ideas].
             let genres = q["genre"].flatMap(AppleAdsGenre.init(rawValue:)).map { [$0] } ?? AppleAdsGenre.allCases
             env.ideas.scan(country: q["sf"] ?? "US", genres: genres, budget: Int(q["budget"] ?? "10") ?? 10, minPopularity: Int(q["min"] ?? "40") ?? 40, maxDifficulty: Int(q["diff"] ?? "35") ?? 35, context: context)
         case "expand":
-            // asoworkbench://lab/expand?app=<trackID>&from=US&to=DE,FR&terms=a,b — keyword × storefront evaluation, logged as [expand].
+            // asoworkbench://lab/expand?app=<trackID>&from=US&to=DE,FR&terms=a,b: keyword × storefront evaluation, logged as [expand].
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first,
                   let market = app.sortedMarkets.first(where: { $0.countryCode == (q["from"] ?? "US") }) ?? app.sortedMarkets.first else { return }
             let terms = (q["terms"] ?? "").split(separator: ",").map { String($0) }.filter { !$0.isEmpty }
@@ -123,7 +123,7 @@ enum LabCommands {
             env.expansion.run(app: app, terms: terms.isEmpty ? market.sortedKeywords.prefix(6).map(\.text) : terms, countries: countries, device: market.device,
                               autoTrack: q["track"] == "1", sourceMarket: market, catalog: env.catalog, context: context, localize: q["localize"] == "1")
         case "writeall":
-            // asoworkbench://lab/writeall?app=<trackID>&brand=YourBrand — batch-writes every locale that has a snapshot or draft.
+            // asoworkbench://lab/writeall?app=<trackID>&brand=YourBrand: batch-writes every locale that has a snapshot or draft.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first else { return }
             let locales = Set(app.snapshots.compactMap(\.locale) + app.drafts.compactMap(\.locale)).sorted { $0.rawValue < $1.rawValue }
             let marketFor: (AppLocale) -> TrackedMarket? = { locale in
@@ -135,7 +135,7 @@ enum LabCommands {
                                                        notes: "", metadata: env.metadataService, context: context)
             for r in results { AppLog.write("[lab] writeall \(r.locale.rawValue)→\(r.market) score=\(r.score) covers=\(r.covered)/\(r.total) title=\"\(r.title)\" subtitle=\"\(r.subtitle)\" keywords=\"\(r.keywords)\"\(r.error.map { " error=\($0)" } ?? "")") }
         case "marker":
-            // asoworkbench://lab/marker?app=<trackID>&title=test&hoursAgo=3 — pins a note marker; logs Δ per keyword against it.
+            // asoworkbench://lab/marker?app=<trackID>&title=test&hoursAgo=3: pins a note marker; logs Δ per keyword against it.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first else { return }
             let m = ReleaseMarker(date: Date.now.addingTimeInterval(-Double(q["hoursAgo"] ?? "3")! * 3600), kind: "note", title: q["title"] ?? "test marker")
             m.app = app
@@ -150,7 +150,7 @@ enum LabCommands {
                 }
             }
         case "ratings":
-            // asoworkbench://lab/ratings?app=<trackID>&all=1 — reads rating counts per storefront and logs the table.
+            // asoworkbench://lab/ratings?app=<trackID>&all=1: reads rating counts per storefront and logs the table.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first else { return }
             let sfs = q["all"] == "1" ? StorefrontRegistry.sortedByName : app.sortedMarkets.compactMap(\.storefront)
             await env.catalog.recordRatings(app: app, storefronts: sfs, context: context)
@@ -159,7 +159,7 @@ enum LabCommands {
                 AppLog.write("[lab] ratings \(cc): \(latest.count) ratings avg=\(latest.average.map { String(format: "%.2f", $0) } ?? "-") observations=\(obs.count)")
             }
         case "reviews":
-            // asoworkbench://lab/reviews?app=<trackID>&all=1 — reads written reviews per storefront and logs the newest.
+            // asoworkbench://lab/reviews?app=<trackID>&all=1: reads written reviews per storefront and logs the newest.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first else { return }
             let sfs = q["all"] == "1" ? StorefrontRegistry.sortedByName : app.sortedMarkets.compactMap(\.storefront)
             await env.catalog.recordReviews(app: app, storefronts: sfs, context: context)
@@ -167,7 +167,7 @@ enum LabCommands {
                 AppLog.write("[lab] review \(r.countryCode) \(r.rating)★ “\(r.title)” by \(r.author) v\(r.version ?? "-") \(r.date?.formatted(date: .abbreviated, time: .omitted) ?? "-"): \(String(r.body.prefix(80)))")
             }
         case "adsync":
-            // asoworkbench://lab/adsync?days=30 — imports the advertiser's Apple Ads keyword rows for tracked apps and logs them.
+            // asoworkbench://lab/adsync?days=30: imports the advertiser's Apple Ads keyword rows for tracked apps and logs them.
             await env.adsImport.sync(apps: apps, days: Int(q["days"] ?? "30") ?? 30, context: context)
             for app in apps where !app.adsStats.isEmpty {
                 for r in app.adsStats.sorted(by: { $0.impressions > $1.impressions }).prefix(10) {
@@ -175,7 +175,7 @@ enum LabCommands {
                 }
             }
         case "ascstatus":
-            // asoworkbench://lab/ascstatus?app=<trackID> — read-only: versions, locales on App Store Connect, screenshot sets.
+            // asoworkbench://lab/ascstatus?app=<trackID>, read-only: versions, locales on App Store Connect, screenshot sets.
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first else { return }
             do {
                 let versions = try await env.metadataService.versions(app: app)
@@ -184,7 +184,7 @@ enum LabCommands {
                 AppLog.write("[lab] asc locales: " + app.snapshots.filter { $0.source == "asc" }.map { "\($0.localeRaw) name=\"\($0.fields.name)\" kw=\($0.fields.keywords.count)ch wn=\($0.fields.whatsNew.count)ch" }.joined(separator: " | "))
             } catch { AppLog.write("[lab] asc error: \(error.localizedDescription)") }
         case "improve":
-            // asoworkbench://lab/improve?app=<trackID>&locale=en-US&sf=US — one improved draft, logged (not saved).
+            // asoworkbench://lab/improve?app=<trackID>&locale=en-US&sf=US: one improved draft, logged (not saved).
             guard let app = apps.first(where: { String($0.trackID) == q["app"] }) ?? apps.first, let locale = AppLocale.parse(q["locale"] ?? "en-US") else { return }
             let market = app.sortedMarkets.first { $0.countryCode == (q["sf"] ?? "US") } ?? app.sortedMarkets.first
             let current = env.metadataService.draftFields(for: app, locale: locale)

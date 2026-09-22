@@ -4,7 +4,7 @@
 #   scripts/release.sh            build dist/ASO-Workbench-<version>.dmg (+ .zip) + checksums + release notes, print the gh command
 #   scripts/release.sh --publish  …and create the GitHub release with `gh` (you must be logged in: gh auth login)
 #
-# Before running: bump VERSION, add a "## [x.y.z] - date" section to CHANGELOG.md, commit, and tag nothing —
+# Before running: bump VERSION, add a "## [x.y.z] - date" section to CHANGELOG.md, commit, and tag nothing,
 # the script tags v<version> through gh when publishing.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

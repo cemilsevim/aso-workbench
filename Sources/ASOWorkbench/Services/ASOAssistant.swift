@@ -181,7 +181,7 @@ final class ASOAssistant {
         App: \(app.name). Storefront: \(storefrontCode). Locale: \(locale.rawValue).
         Current listing: title="\(current.name)" subtitle="\(current.subtitle)" keywords="\(current.keywords)"
         Findings to resolve:
-        \(findings.isEmpty ? "(none — just use the room and cover the missing phrases)" : findings)
+        \(findings.isEmpty ? "(none: just use the room and cover the missing phrases)" : findings)
         Priority phrases not covered yet (cover as many as fit, tier A first):
         \(missing.isEmpty ? "(all covered)" : missing)
         Words used by other locales indexed on this storefront (do not repeat): \(siblingWordsText)
@@ -229,6 +229,7 @@ final class ASOAssistant {
                 AppLog.write("[assistant] improve \(locale.rawValue): rejected, quality \(quality(f, review)) < \(quality(current, before))")
                 return nil
             }
+            f = ASORules.plainPunctuation(f)
             var p = Proposal(label: "Improved", fields: f, rationale: (json["rationale"] as? String ?? "") + " Rule score \(before.score) → \(review.score).", review: review, issues: MetadataValidator.validate(f), repairs: repairs)
             p.coveredPhrases = plan.priority.map(\.term).filter { KeywordPlan.covers(f, phrase: $0) }
             p.missedPhrases = plan.priority.map(\.term).filter { !KeywordPlan.covers(f, phrase: $0) }
@@ -245,11 +246,11 @@ final class ASOAssistant {
         let trimmed = String(source.trimmingCharacters(in: .whitespacesAndNewlines).prefix(4000))
         if locale == sourceLocale || LegalFooterLanguage.same(locale, sourceLocale) { return trimmed }
         let (text, usage) = try await llm.complete(model: model,
-            system: "You localize App Store release notes (\"What's New\"). Output only the localized notes, nothing else: same facts and order, natural phrasing a native speaker would write, keep the line structure (one item per line, dashes kept), plain text, at most 4000 characters. Do not add features that are not in the source.",
+            system: "You localize App Store release notes (\"What's New\"). Output only the localized notes, nothing else: same facts and order, natural phrasing a native speaker would write, keep the line structure (one item per line, list lines start with a bullet •), never use em or en dashes as punctuation, plain text, at most 4000 characters. Do not add features that are not in the source.",
             user: "App: \(app.name). Source language: \(sourceLocale.displayName). Target: \(locale.displayName) (\(locale.rawValue)).\n\nRelease notes:\n\(trimmed)",
             temperature: 0.2, maxTokens: 1200)
         if let u = usage { lastCost = u.cost.map { String(format: "$%.4f", $0) } ?? "\(u.inputTokens)+\(u.outputTokens) tokens" }
-        return String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(4000))
+        return String(ASORules.plainPunctuation(text.trimmingCharacters(in: .whitespacesAndNewlines)).prefix(4000))
     }
 
     /// Release notes for other locales from one source text: natural, same content, saved into each draft's What's New.
@@ -310,9 +311,9 @@ final class ASOAssistant {
             "- \(it.term) (popularity \(it.popularity.map(String.init) ?? "?"), difficulty \(it.difficulty.map(String.init) ?? "?"), rank \(it.rank ?? "unmeasured")\(KeywordPlan.covers(current, phrase: it.term) ? ", already covered" : ""))"
         }
         var priorityText = ""
-        if !plan.tierA.isEmpty { priorityText += "TIER A — winnable now (cover ALL of these; they come first in the keyword field and, where natural, in title or subtitle):\n" + plan.tierA.map(line).joined(separator: "\n") + "\n" }
-        if !plan.tierB.isEmpty { priorityText += "TIER B — reachable (cover after tier A, as many as fit):\n" + plan.tierB.map(line).joined(separator: "\n") + "\n" }
-        if !plan.tierC.isEmpty { priorityText += "TIER C — popular but hard (only if room remains after A and B):\n" + plan.tierC.map(line).joined(separator: "\n") + "\n" }
+        if !plan.tierA.isEmpty { priorityText += "TIER A: winnable now (cover ALL of these; they come first in the keyword field and, where natural, in title or subtitle):\n" + plan.tierA.map(line).joined(separator: "\n") + "\n" }
+        if !plan.tierB.isEmpty { priorityText += "TIER B: reachable (cover after tier A, as many as fit):\n" + plan.tierB.map(line).joined(separator: "\n") + "\n" }
+        if !plan.tierC.isEmpty { priorityText += "TIER C: popular but hard (only if room remains after A and B):\n" + plan.tierC.map(line).joined(separator: "\n") + "\n" }
         let avoidText = plan.avoid.map { "\($0.term)" }.joined(separator: ", ")
         // Only locales indexed on this storefront compete with this one; other drafts are irrelevant to word choice here.
         let storefrontCode = market?.countryCode ?? "US"
@@ -325,14 +326,15 @@ final class ASOAssistant {
         Output strict JSON only, no prose, with this shape:
         {"proposals":[{"label":"A","title":"…","subtitle":"…","keywords":"w1,w2,…","rationale":"…"\(writePromo ? ",\"promotional_text\":\"…\"" : "")}, …]\(writeDescription ? ",\"description\":\"…\"" : "")}
         \(writePromo ? "promotional_text: at most 170 characters, one or two sentences of conversion copy in the locale language (what the user gets), no keyword stuffing, no emoji; it is not indexed." : "")
-        \(writeDescription ? "description: 700–1500 characters in the locale language, shared by all proposals: an opening line on what the app does for the user, a short list of the key features from the app description (one per line, starting with a dash), a closing line; plain text, no markdown headings, no claims the app description does not support. It is not indexed by App Store search — write it for conversion." : "")
+        \(writeDescription ? "description: 700–1500 characters in the locale language, shared by all proposals: an opening line on what the app does for the user, a short list of the key features from the app description (one per line, each starting with a bullet •), a closing line; plain text, no markdown headings, no claims the app description does not support. It is not indexed by App Store search, write it for conversion." : "")
         Give exactly 3 proposals with different emphasis (search-volume first, differentiation first, balanced).
         Hard limits you must count: title at most 30 characters, subtitle at most 30 characters, keywords at most 14 single words (code packs them to 100 characters, so quality matters more than count).
         Use the room: aim for 26–30 characters in the title and 26–30 in the subtitle; every unused character is a lost ranking chance. Add a real search word rather than leaving space.
-        The keyword field must come out at 90–100 characters after packing: give 14–18 single search words (the priority phrases' words first, then other words people type for this kind of app, drawn from the app description and category) — the code packs them and drops what does not fit.
+        The keyword field must come out at 90–100 characters after packing: give 14–18 single search words (the priority phrases' words first, then other words people type for this kind of app, drawn from the app description and category), the code packs them and drops what does not fit.
+        Never use the em dash (—) or en dash (–) as punctuation in any field; use a comma, colon or period instead. List lines start with "• ".
         Never use "&", "and", "to", "your", "with", "for", "the", "a" or any other filler in any field. Never repeat a word across the three fields, and never write both a word and its plural. Keywords are lower-case single words with no spaces.
         The brand string must appear verbatim in the title.
-        Every keyword must be a complete, correctly spelled dictionary word or proper name — never abbreviate or truncate a word to save characters (write "calendar", not "calend"); drop a word instead.
+        Every keyword must be a complete, correctly spelled dictionary word or proper name, never abbreviate or truncate a word to save characters (write "calendar", not "calend"); drop a word instead.
         Prefer words with evidence: the keyword table gives Apple popularity (1–100, higher is more searched; "below N" means Apple publishes nothing for it) and difficulty (0–100, lower is easier). Keep only words the app genuinely delivers.
         Write the listing in the language of the target locale. For a secondary locale (e.g. es-MX shown in the US storefront) write English words that do not overlap with the sibling listings.
         """
@@ -345,7 +347,7 @@ final class ASOAssistant {
         \(siblingsText.isEmpty ? "(none)" : siblingsText)
         PRIORITY PHRASES by tier (measured in this storefront). A phrase counts as covered when every one of its words appears somewhere across title, subtitle and keywords (word order does not matter; Apple combines fields). Tier A before B before C; inside a tier, higher popularity first:
         \(priorityText.isEmpty ? "(no tracked keywords with evidence yet)" : priorityText)
-        AVOID these tracked terms — other brands or navigational names, unrelated to what this app does, or too hard to win; do not use their distinctive words: \(avoidText.isEmpty ? "(none)" : avoidText)
+        AVOID these tracked terms: other brands or navigational names, unrelated to what this app does, or too hard to win; do not use their distinctive words: \(avoidText.isEmpty ? "(none)" : avoidText)
         Full keyword evidence (JSON): \((try? String(decoding: JSONSerialization.data(withJSONObject: keywordRows, options: []), as: UTF8.self)) ?? "[]")
         Competitors seen in tracked queries: \(competitors.isEmpty ? "(none measured yet)" : competitors.joined(separator: "; "))
         App description (for what the app really does): \(description.isEmpty ? "(unavailable)" : description)
@@ -361,7 +363,7 @@ final class ASOAssistant {
             let sharedDescription = (json["description"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             // Evidence-ranked single words used to top up the keyword field: best tracked keywords first.
             // Only keywords Apple publishes a value for (≥ published floor) qualify; low-signal terms would pad the field with noise.
-            // Top-up words follow the plan: tier A phrases first, then B, then C — so missed priority phrases get packed in when room remains.
+            // Top-up words follow the plan: tier A phrases first, then B, then C, so missed priority phrases get packed in when room remains.
             let evidenceWords: [String] = plan.priority.flatMap { ASORules.words($0.term) }
             var proposals: [Proposal] = []
             for item in items {
@@ -404,6 +406,7 @@ final class ASOAssistant {
                 var proposal = Proposal(label: item["label"] as? String ?? "?", fields: f, rationale: item["rationale"] as? String ?? "", review: review, issues: MetadataValidator.validate(f), repairs: repairs)
                 proposal.coveredPhrases = plan.priority.map(\.term).filter { KeywordPlan.covers(f, phrase: $0) }
                 proposal.missedPhrases = plan.priority.map(\.term).filter { !KeywordPlan.covers(f, phrase: $0) }
+                proposal.fields = ASORules.plainPunctuation(proposal.fields)
                 proposals.append(proposal)
             }
             // Rule score, then coverage weighted by tier: a covered tier-A phrase is worth three tier-C ones.
@@ -422,7 +425,7 @@ final class ASOAssistant {
     private func moreKeywords(app: TrackedApp, locale: AppLocale, description: String, used: [String], needed: Int) async throws -> [String] {
         let (out, _) = try await llm.complete(model: model,
             system: "You suggest App Store keyword-field words. Output only a comma-separated list of lower-case single words, nothing else. No brand names of other companies, no filler words, no plurals of words already used, no word already used.",
-            user: "App: \(app.name). Category: \(app.primaryGenre ?? "unknown"). Locale: \(locale.rawValue) — write in that language. What the app does: \(String(description.prefix(700))). Already used words: \(used.joined(separator: ", ")). Give \(needed) more words people type when looking for this kind of app, most searched first.",
+            user: "App: \(app.name). Category: \(app.primaryGenre ?? "unknown"). Locale: \(locale.rawValue): write in that language. What the app does: \(String(description.prefix(700))). Already used words: \(used.joined(separator: ", ")). Give \(needed) more words people type when looking for this kind of app, most searched first.",
             temperature: 0.3, maxTokens: 120)
         return out.split(whereSeparator: { $0 == "," || $0 == "\n" }).map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
             .filter { !$0.isEmpty && !$0.contains(" ") && !used.contains($0) }
@@ -432,7 +435,7 @@ final class ASOAssistant {
     private func extend(_ text: String, field: MetadataField, brand: String, locale: AppLocale, candidates: [String]) async throws -> String {
         let (out, _) = try await llm.complete(model: model,
             system: "Rewrite App Store listing text to use 26–30 characters. Output only the rewritten text, nothing else. Keep every existing word, add one or two of the candidate search words that fit naturally, in the locale language. No \"&\", no filler words (and, to, your, with, for, the, a).",
-            user: "Field: \(field.title). Locale: \(locale.rawValue). \(field == .name ? "Keep the brand \"\(brand)\" verbatim. " : "")Candidate words: \(candidates.isEmpty ? "(none — extend with a relevant search word)" : candidates.joined(separator: ", ")). Text: \(text)",
+            user: "Field: \(field.title). Locale: \(locale.rawValue). \(field == .name ? "Keep the brand \"\(brand)\" verbatim. " : "")Candidate words: \(candidates.isEmpty ? "(none: extend with a relevant search word)" : candidates.joined(separator: ", ")). Text: \(text)",
             temperature: 0.2, maxTokens: 60)
         return out.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\"“”"))
     }
@@ -446,7 +449,7 @@ final class ASOAssistant {
     }
 }
 
-/// en-US and en-GB share release notes; so do es-ES/es-MX, pt-BR/pt-PT, fr-FR/fr-CA — Apple treats them as exchangeable.
+/// en-US and en-GB share release notes; so do es-ES/es-MX, pt-BR/pt-PT, fr-FR/fr-CA, Apple treats them as exchangeable.
 enum LegalFooterLanguage {
     static func same(_ a: AppLocale, _ b: AppLocale) -> Bool {
         func lang(_ l: AppLocale) -> String { l.rawValue.hasPrefix("zh-") ? l.rawValue : String(l.rawValue.split(separator: "-").first ?? "") }

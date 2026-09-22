@@ -116,7 +116,7 @@ public struct KeywordSuggestion: Sendable, Hashable, Codable, Identifiable {
     public let origin: DataOrigin
     /// 0–100 when the provider supplies one; nil otherwise. Never zero-filled.
     public let popularity: Int?
-    /// Position in the suggestion list (1-based) — the only signal public hints give.
+    /// Position in the suggestion list (1-based): the only signal public hints give.
     public let position: Int
     public let fetchedAt: Date
 

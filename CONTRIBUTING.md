@@ -20,7 +20,7 @@ Requirements: macOS 15+, Xcode 26 (Swift 6.2). No third-party dependencies.
 
 ## Ground rules
 
-These keep the numbers trustworthy — please keep them in any change:
+These keep the numbers trustworthy, please keep them in any change:
 
 1. **Every number shows its source.** Apple's value, a public-search value and a model estimate are never mixed without a label.
 2. **Absence is not zero.** "Not in the top 200", "no record" and "request failed" are separate states.

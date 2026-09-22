@@ -1,7 +1,7 @@
 import Foundation
 
 /// A competitor as seen through *our tracked queries only*. This is explicitly not
-/// "all keywords of this competitor" — the research plan warns against implying that.
+/// "all keywords of this competitor", the research plan warns against implying that.
 public struct CompetitorSummary: Sendable, Hashable, Identifiable {
     public let app: SearchResultApp
     /// Tracked keywords in which the app appeared, with its position in each.

@@ -14,15 +14,15 @@ Uygulamanızın hangi aramada kaçıncı olduğunu takip edin, gerçekten kazana
 
 [Kurulum](#kurulum) · [Hızlı başlangıç](#hızlı-başlangıç) · [Özellikler](#neler-yapar) · [Anahtarlar](#bağlantılar-hangi-anahtar-neden) · [Rakamlar nasıl hesaplanır](#rakamlar-nasıl-hesaplanır) · [SSS](#sss)
 
+<sub><a href="README.md">English</a> · <b>Türkçe</b> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.ko.md">한국어</a> · <a href="README.es.md">Español</a> · <a href="README.de.md">Deutsch</a></sub>
+
 </div>
 
-<!-- TANITIM (docs/media/demo.gif ve demo.mp4 oluşunca açın: make demo VIDEO=…)
 <div align="center">
   <a href="docs/media/demo.mp4"><img src="docs/media/demo.gif" width="880" alt="ASO Workbench kullanımda: keyword takibi, popülerlik ve difficulty, mağaza sayfası yazımı"></a>
   <br>
   <sub>▶ <a href="docs/media/demo.mp4"><b>Videonun tamamını izleyin</b></a> · yukarıdaki önizleme sessizdir ve döngüde oynar</sub>
 </div>
--->
 
 <!-- İlk push'tan sonra satır içi oynatıcı da eklenebilir: README'yi github.com'da düzenleyin, docs/media/demo.mp4 dosyasını
      bu yorumun altındaki satıra sürükleyin (ücretsiz hesapta 10 MB'a kadar) ve kaydedin. -->
@@ -46,7 +46,7 @@ ASO Workbench başka bir yol izler:
 |---|---|
 | 📈 **Takip** | Her keyword için sıra, ülke ve cihaz bazında, gerçek App Store aramasından (ilk 200). Sürümlerinizin işaretlendiği geçmiş grafiği. Δ son sürümünüze göre hesaplanır; tekrar ölçünce kazanç kaybolmaz. Ülke bazında puanlar ve yazılı yorumlar. |
 | 🔎 **Araştırma** | Apple'ın yayınladığı yerde Apple'ın popülerliği, başka yerde etiketli bir tahmin. İlk on sonuçtan, tamamen açıklanmış difficulty. **Altın keyword'ler** (gerçek talep, yenilebilir rekabet, başkasının markası değil, uygulamanızla ilgili). Rakibin keyword'lerini içe aktarma. Autocomplete fikirleri. |
-| 🌍 **Dünyaya açıl** | Keyword'lerinizi tek seferde başka ülkelerde deneyin — yerel dilde yapay zekâ önerili arama biçimleri dahil — ve kazananları tek tıkla takibe alın. |
+| 🌍 **Dünyaya açıl** | Keyword'lerinizi tek seferde başka ülkelerde deneyin (yerel dilde yapay zekâ önerili arama biçimleri dahil) ve kazananları tek tıkla takibe alın. |
 | ✍️ **Yazma** | Başlık, alt başlık ve keyword alanını önce kazanabileceğiniz keyword'lerle dolduran yapay zekâ yazarı. *Make better* her kural bulgusunu düzeltir. Tüm dilleri tek seferde yazma, her dil için What's New, Kullanım Koşulları ve Gizlilik bağlantılarının otomatik eklenmesi. |
 | 🚀 **Yayınlama** | Taslakları App Store Connect'e gönderin: eksik diller oluşturulur, ekran görüntüleri kopyalanır, yeni sürüm açılır, her yazma geri okunur. İncelemeye hiçbir şey gönderilmez. |
 | 🧪 **Ölçme** | Sürümlerin ve değişikliklerin zaman çizelgesi, keyword değerine göre ağırlıklı önce/sonra raporuyla. Apple Ads sonuçlarınız keyword ve ülke bazında. RevenueCat'ten MRR ve abonelikler. |
@@ -87,7 +87,7 @@ Başlamak için hiçbir anahtar gerekmez. Her biri belirli bir şeyi açar; uygu
 
 | Bağlantı | Gereklilik | Ne açar | Maliyet |
 |---|---|---|---|
-| *(yok)* | — | Sıralar, autocomplete, rakipler, difficulty, puanlar, yorumlar | ücretsiz |
+| *(yok)* | gerekmez | Sıralar, autocomplete, rakipler, difficulty, puanlar, yorumlar | ücretsiz |
 | **Apple Ads API** | Önerilen | Apple'ın kendi popülerliği, kampanya sonuçlarınız | ücretsiz, para harcamaz |
 | **App Store Connect API** | İsteğe bağlı | Mağaza sayfanızı her dilde çekme ve yayınlama | ücretsiz |
 | **OpenRouter** | İsteğe bağlı | Yapay zekâ yazarı, çeviriler, marka/ilgi kontrolleri, popülerlik tahminleri | kullandıkça öde, sentin küçük kesirleri |
@@ -104,7 +104,7 @@ Anahtarlar Mac'inizde yalnız sizin okuyabildiğiniz tek bir dosyada durur ve he
 |---|---|---|
 | **Sıra (Rank)** | Biri bu kelimeyi aradığında uygulamanızın kaçıncı çıktığı. | düşük (#1 en iyisi) |
 | **Popülerlik** (5–100) | Bu kelimeyi Apple'ın ölçeğinde ne kadar kişinin aradığı. | yüksek |
-| **Difficulty** (0–100) | İlk sayfaya çıkmanın ne kadar zor olduğu — orada zaten duran uygulamaların ne kadar büyük ve odaklı olduğu. | düşük |
+| **Difficulty** (0–100) | İlk sayfaya çıkmanın ne kadar zor olduğu. Orada zaten duran uygulamaların büyüklüğüne ve odağına bakar. | düşük |
 | **Opportunity** | Difficulty ile indirilmiş popülerlik: popülerlik × (1 − (difficulty ÷ 100)²). | yüksek |
 | **Fit** | Bunu arayan kişinin sizinki gibi bir uygulama isteme olasılığı. | ilgili (≥ %50) |
 | **Golden ★** | Popülerlik ≥ 30, difficulty ≤ 45, marka değil, uygulamanızla ilgili. | ★ |
@@ -116,9 +116,16 @@ Apple 1–100 popülerliği yalnız her türün tepesi için (aylık listeler) y
 1. **Apple'ın liste değeri** (`Apple` rozeti, Apple Ads anahtarı gerekir),
 2. **Apple'ın tam endeksi** (`Apple · index` rozeti, isteğe bağlı web oturumu),
 3. **model tahmini** (`Derived · est.` rozeti); Apple'ın "5" dediği yerde de **taban terimleri arasında 6–29 sırası**, böylece onları yine de kıyaslayabilirsiniz,
-4. hiçbiri yoksa **"< N"** — listedeki en düşük puanın altında.
+4. hiçbiri yoksa **"< N"**: listedeki en düşük puanın altında.
 
-Tahmin, uygulamayla birlikte gelen küçük bir modelden gelir: beş ülkede Apple'ın gerçek popülerliğiyle etiketlenmiş yaklaşık 55.800 terimle bir kez eğitildi ve yalnız herkese açık ipuçlarını kullanır (autocomplete, arama sonuçları ve bir dil modelinin evet/hayır cevapları). Hiç görmediği terimlerde Apple ile aynı sırayı **0,74** korelasyonla verir ve tipik bir terimde yaklaşık **10 puan** sapar. Sıralamaya yardımcı bir araçtır, her zaman etiketlidir ve Apple'ın sayısı varsa hep o kazanır. **[Nasıl kuruldu ve test edildi →](docs/POPULARITY.md)** (İngilizce)
+Tahmin, bizim eğittiğimiz ve uygulamanın içinde gelen bir modelden gelir:
+
+1. **Veri.** Beş ülkeden (US, GB, DE, FR, TR) yaklaşık 55.800 arama terimi.
+2. **Cevap anahtarı.** Her terim Apple'ın gerçek popülerliğiyle etiketlendi.
+3. **İpuçları.** Her terim yalnız herkese açık ipuçlarıyla tarif edildi: autocomplete, arama sonuçları ve **Jev**. Jev (TypeSafe Jev, OpenRouter üzerinden çalışan küçük bir sınıflandırma modeli) dar soruları olasılıkla cevaplar: "bu bir marka mı?", "gerçek bir talep gibi mi duruyor?", "hangi kategoriye ait?".
+4. **Eğitim.** İki küçük CreateML modeli bu ipuçlarından Apple'ın sayısını tahmin etmeyi öğrendi. Modeller uygulamayla birlikte gelir, sizin hiçbir şey eğitmeniz gerekmez.
+
+Kullanımda Jev aynı soruları sizin yeni terimleriniz için cevaplar, bu yüzden tahmin OpenRouter anahtarı ister. Hiç görmediği terimlerde model Apple ile aynı sırayı **0,74** korelasyonla verir ve tipik bir terimde yaklaşık **10 puan** sapar. Sıralamaya yardımcı bir araçtır, her zaman etiketlidir ve Apple'ın sayısı varsa hep o kazanır. **[Yöntemin tamamı ve test sonuçları →](docs/POPULARITY.md#the-model-step-by-step)** (İngilizce)
 
 ### Difficulty
 
@@ -126,14 +133,14 @@ Arayan kişinin gerçekten gördüğü **ilk on** herkese açık sonuçtan hesap
 
 ### Önce / sonra
 
-Her sürüm (otomatik algılanır), yayınladığınız her değişiklik ve eklediğiniz her not bir işaret olur. **Changes** sayfası, sıraları işaretten önce ve sonra, her keyword'ün değerine göre ağırlıklandırarak karşılaştırır — kimsenin aramadığı bir kelimede 50 sıra yükselmek hiçbir şey saymaz.
+Her sürüm (otomatik algılanır), yayınladığınız her değişiklik ve eklediğiniz her not bir işaret olur. **Changes** sayfası, sıraları işaretten önce ve sonra, her keyword'ün değerine göre ağırlıklandırarak karşılaştırır. Kimsenin aramadığı bir kelimede 50 sıra yükselmek hiçbir şey saymaz.
 
 ## Gizlilik ve güvenlik
 
 - Yerel çalışır. ASO Workbench sunucusu, hesabı, analitiği yoktur.
-- Uygulama yalnız izin listesindeki host'larla konuşur (Apple, OpenRouter, RevenueCat, güncelleme kontrolü için GitHub) — [tam liste](SECURITY.md).
+- Uygulama yalnız izin listesindeki host'larla konuşur (Apple, OpenRouter, RevenueCat, güncelleme kontrolü için GitHub). Bkz. [tam liste](SECURITY.md).
 - Onayınız olmadan App Store Connect'e hiçbir şey yazılmaz; her yazma geri okunur; incelemeye hiçbir şey gönderilmez.
-- Anahtarlar: `~/Library/Application Support/ASO Workbench/credentials.json` (izinler 600). Veri: aynı klasörde `store.sqlite` — yedekleyebileceğiniz ya da silebileceğiniz düz bir SQLite dosyası.
+- Anahtarlar: `~/Library/Application Support/ASO Workbench/credentials.json` (izinler 600). Veri: aynı klasörde `store.sqlite`, yedekleyebileceğiniz ya da silebileceğiniz düz bir SQLite dosyası.
 
 Bkz. **[SECURITY.md](SECURITY.md)**.
 
@@ -143,13 +150,13 @@ Bkz. **[SECURITY.md](SECURITY.md)**.
 Sources/
 ├── ASOCore/        saf mantık: modeller, kurallar, difficulty, farklar, özellikler (ağ yok, arayüz yok)
 ├── ASOProviders/   izin listeli HTTP istemcisinin arkasında Apple, OpenRouter ve RevenueCat bağdaştırıcıları
-└── ASOWorkbench/      SwiftUI uygulaması: ekranlar, servisler, SwiftData modeli, tasarım sistemi
+└── ASOWorkbench/   SwiftUI uygulaması: ekranlar, servisler, SwiftData modeli, tasarım sistemi
 Resources/          Info.plist, simge, gömülü popülerlik modeli
 scripts/            bundle-app.sh (.app derler), release.sh (.dmg + GitHub sürümü)
-docs/               POPULARITY, CONNECTIONS, ARCHITECTURE, RELEASING; tr/ altında Türkçe SwiftUI rehberi
+docs/               POPULARITY, CONNECTIONS, ARCHITECTURE, RELEASING
 ```
 
-Derleyicinin birbirinden ayrı tuttuğu üç katman, Swift 6 katı eşzamanlılık, sıfır bağımlılık. **[Mimari →](docs/ARCHITECTURE.md)** · **[SwiftUI altyapı rehberi (Türkçe) →](docs/tr/swiftui-altyapi-rehberi.md)**
+Derleyicinin birbirinden ayrı tuttuğu üç katman, Swift 6 katı eşzamanlılık, sıfır bağımlılık. **[Mimari →](docs/ARCHITECTURE.md)**
 
 ## Geliştirme
 
@@ -185,4 +192,4 @@ macOS 15 gerektiren SwiftData, SwiftUI inspector ve Swift 6 özelliklerini kulla
 
 ASO Workbench'in Apple ile bir bağı yoktur ve Apple tarafından onaylanmamıştır. App Store, Apple Ads ve App Store Connect, Apple Inc.'in ticari markalarıdır.
 
-<div align="center"><sub><a href="README.md">English</a></sub></div>
+<div align="center"><sub><a href="README.md">English</a> · <b>Türkçe</b> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.ko.md">한국어</a> · <a href="README.es.md">Español</a> · <a href="README.de.md">Deutsch</a></sub></div>

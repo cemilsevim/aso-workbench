@@ -27,7 +27,7 @@ public struct AppleAdsCredentials: Sendable, Codable, Equatable {
 }
 
 extension String {
-    /// Removes whitespace, control and zero-width characters — pasted identifiers often carry a trailing newline.
+    /// Removes whitespace, control and zero-width characters, pasted identifiers often carry a trailing newline.
     public var strippedIdentifier: String {
         filter { !$0.isWhitespace && !$0.isNewline && !($0.unicodeScalars.first.map { CharacterSet.controlCharacters.contains($0) || (0x200B...0x200F).contains($0.value) || $0.value == 0xFEFF } ?? false) }
     }

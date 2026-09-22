@@ -2,7 +2,7 @@ import Foundation
 
 /// How hard it is to reach the visible top of one search, 0–100, from the public result list only.
 ///
-/// It looks at what a searcher actually sees — the first ten results — and asks six questions:
+/// It looks at what a searcher actually sees, the first ten results, and asks six questions:
 ///
 /// | Component | Weight | Question |
 /// |---|---|---|

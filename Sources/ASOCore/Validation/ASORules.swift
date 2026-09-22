@@ -111,7 +111,7 @@ public enum ASORules {
             guard !overlap.isEmpty else { continue }
             let list = overlap.sorted().prefix(6).joined(separator: ", ")
             if let primary, locale == primary {
-                out.append(.init(kind: .info, rule: "Locale overlap", message: "\(loc.rawValue) repeats \(overlap.count) of these words (\(list)); rewrite \(loc.rawValue) to add new words — the primary listing keeps the best ones."))
+                out.append(.init(kind: .info, rule: "Locale overlap", message: "\(loc.rawValue) repeats \(overlap.count) of these words (\(list)); rewrite \(loc.rawValue) to add new words, the primary listing keeps the best ones."))
             } else {
                 out.append(.init(kind: .warning, rule: "Locale overlap", message: "\(overlap.count) word(s) also appear in \(loc.rawValue) (\(list)); a secondary locale should add new words, not repeat them."))
             }
@@ -151,6 +151,24 @@ public extension ASORules {
     /// stripped of title/subtitle words, filler, duplicates and plural twins, packed to ≤100
     /// characters, and topped up from `fillers` (evidence-ranked words) when there is room.
     /// Title and subtitle are left to the model; only "&" and double spaces are cleaned.
+    /// House style for store text: no em or en dashes as punctuation (a comma instead; numeric ranges like 6–29 stay),
+    /// and "•" instead of "-" at the start of list lines.
+    public static func plainPunctuation(_ text: String) -> String {
+        var t = text
+        t = t.replacingOccurrences(of: #"\s*[—–]\s*(?=\D)"#, with: ", ", options: .regularExpression)
+        t = t.replacingOccurrences(of: "—", with: ", ")
+        t = t.replacingOccurrences(of: #"(?m)^(\s*)[-–—]\s+"#, with: "$1• ", options: .regularExpression)
+        t = t.replacingOccurrences(of: ", ,", with: ",").replacingOccurrences(of: " ,", with: ",")
+        return t
+    }
+
+    /// All text fields of a listing in house style (keywords are left alone).
+    public static func plainPunctuation(_ f: MetadataFields) -> MetadataFields {
+        var f = f
+        for field in [MetadataField.name, .subtitle, .promotionalText, .description, .whatsNew] { f[field] = plainPunctuation(f[field]) }
+        return f
+    }
+
     static func repair(_ input: MetadataFields, topUpWith fillers: [String] = []) -> RepairResult {
         var f = input
         var notes: [String] = []

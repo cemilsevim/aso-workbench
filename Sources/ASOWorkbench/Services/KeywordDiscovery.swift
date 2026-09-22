@@ -38,7 +38,7 @@ final class KeywordDiscovery {
         func golden(minPopularity: Int, maxDifficulty: Int) -> Bool {
             passesNumbers(minPopularity: minPopularity, maxDifficulty: maxDifficulty) && (jevFit ?? 1) >= 0.5
         }
-        /// Numbers pass but the term is unrelated to this app — a lead for another app.
+        /// Numbers pass but the term is unrelated to this app, a lead for another app.
         func goldenLead(minPopularity: Int, maxDifficulty: Int) -> Bool {
             passesNumbers(minPopularity: minPopularity, maxDifficulty: maxDifficulty) && (jevFit ?? 1) < 0.5
         }

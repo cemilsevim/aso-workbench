@@ -80,7 +80,7 @@ struct OverviewView: View {
                 GroupBox("Apple Ads genre for popularity lookups") {
                     VStack(alignment: .leading, spacing: 6) {
                         Picker("Genre", selection: $app.adsGenre) {
-                            Text("Any — search all 15 genres (default)").tag(Optional<AppleAdsGenre>.none)
+                            Text("Any: search all 15 genres (default)").tag(Optional<AppleAdsGenre>.none)
                             Divider()
                             ForEach(AppleAdsGenre.allCases) { Text($0.displayName).tag(Optional($0)) }
                         }

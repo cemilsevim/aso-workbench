@@ -4,6 +4,17 @@ All notable changes are listed here, newest first. Versions follow [Semantic Ver
 **major** for changes that break your data or workflow, **minor** for new features, **patch** for fixes.
 The in-app updater shows the section of the new version as its release notes.
 
+## [Unreleased]
+
+### Changed
+- The AI writer no longer uses em or en dashes as punctuation, and list lines in descriptions and What's New start with "•".
+- Interface text uses commas, colons and periods instead of em dashes.
+
+### Docs
+- README in English, Turkish, Simplified Chinese, Japanese, Korean, Spanish and German.
+- Demo video in the README.
+- The popularity section explains how the estimate model was trained, including the Jev clues.
+
 ## [1.0.0] - 2026-09-22
 
 First public release.

@@ -35,7 +35,7 @@ struct ResearchView: View {
                                        items: results.publicHints, error: results.publicError)
                     if env.adsState.isUsable {
                         suggestionsSection(title: "Apple Ads keyword suggestions", origin: .officialObserved,
-                                           note: "Seeded with the term above and this app. The 0–100 popularity is relative across all App Store countries — Apple does not return a storefront — so use it for discovery, not for country-level decisions.",
+                                           note: "Seeded with the term above and this app. The 0–100 popularity is relative across all App Store countries, Apple does not return a storefront, so use it for discovery, not for country-level decisions.",
                                            items: results.appleAds, error: results.appleAdsError)
                     }
                 }

@@ -449,7 +449,7 @@ struct MetadataView: View {
             GroupBox {
                 VStack(alignment: .leading, spacing: 6) {
                     if let v = ascVersions.first(where: \.isEditable) {
-                        Label("Version v\(v.versionString) · \(v.state) — editable", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                        Label("Version v\(v.versionString) · \(v.state): editable", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
                     } else if ascVersions.isEmpty {
                         Label("Reading versions…", systemImage: "clock")
                     } else {

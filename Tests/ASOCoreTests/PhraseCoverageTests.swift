@@ -16,3 +16,15 @@ struct PhraseCoverageTests {
         #expect(!covers(f, "comic reader"))        // "reader" nowhere
     }
 }
+
+@Suite("House punctuation")
+struct PlainPunctuationTests {
+    @Test func dashesBecomeCommasAndBullets() {
+        let text = "Plan every meal — from purées to finger food.\n- Weekly plan\n- 150+ guides\nFrom 6–24 months."
+        let out = ASORules.plainPunctuation(text)
+        #expect(!out.contains("—"))
+        #expect(out.contains("Plan every meal, from purées"))
+        #expect(out.contains("\n• Weekly plan\n• 150+ guides"))
+        #expect(out.contains("6–24 months"))     // numeric ranges stay
+    }
+}

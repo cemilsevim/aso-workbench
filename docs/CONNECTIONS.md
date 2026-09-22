@@ -4,12 +4,12 @@ ASO Workbench works **without any key**. Each connection adds one thing. Add onl
 
 | Connection | Need | What it unlocks | Talks to | Cost |
 |---|---|---|---|---|
-| *(none)* | — | Rank tracking, autocomplete ideas, competitors, difficulty, ratings, reviews | itunes.apple.com, search.itunes.apple.com | free |
-| [Apple Ads API](#apple-ads-api--recommended) | **Recommended** | Apple's own popularity, your campaign results | appleid.apple.com, api.ads.apple.com, api.searchads.apple.com | free, spends nothing |
-| [App Store Connect API](#app-store-connect-api--optional) | Optional | Pull and publish your listing in every language | api.appstoreconnect.apple.com | free |
-| [OpenRouter](#openrouter--optional) | Optional | AI writer, translations, brand and relevance checks, popularity estimates | openrouter.ai | pay per use, cents |
-| [RevenueCat](#revenuecat--optional) | Optional | MRR and subscriptions on Overview | api.revenuecat.com | free |
-| [Apple Ads website session](#apple-ads-website-session--advanced-optional) | Advanced | Apple's exact popularity index for terms missing from the lists | app-ads.apple.com | free |
+| *(none)* | not needed | Rank tracking, autocomplete ideas, competitors, difficulty, ratings, reviews | itunes.apple.com, search.itunes.apple.com | free |
+| [Apple Ads API](#apple-ads-api-recommended) | **Recommended** | Apple's own popularity, your campaign results | appleid.apple.com, api.ads.apple.com, api.searchads.apple.com | free, spends nothing |
+| [App Store Connect API](#app-store-connect-api-optional) | Optional | Pull and publish your listing in every language | api.appstoreconnect.apple.com | free |
+| [OpenRouter](#openrouter-optional) | Optional | AI writer, translations, brand and relevance checks, popularity estimates | openrouter.ai | pay per use, cents |
+| [RevenueCat](#revenuecat-optional) | Optional | MRR and subscriptions on Overview | api.revenuecat.com | free |
+| [Apple Ads website session](#apple-ads-website-session-advanced-optional) | Advanced | Apple's exact popularity index for terms missing from the lists | app-ads.apple.com | free |
 
 ## Where keys live
 
@@ -22,7 +22,7 @@ Why a file and not the Keychain? Builds from source are signed ad hoc, and every
 
 ---
 
-## Apple Ads API — Recommended
+## Apple Ads API: Recommended
 
 **Unlocks**
 - Apple's own search popularity (1–100) per country, from the monthly *Search Term Rank* lists.
@@ -42,9 +42,9 @@ Why a file and not the Keychain? Builds from source are signed ad hoc, and every
 4. The **Org ID** is in the account menu at the top right of ads.apple.com.
 5. In ASO Workbench → Connections → Apple Ads API: fill Client ID, Key ID, Org ID, choose `aso-ads-private.pem`, press **Save**, then **Test connection**.
 
-If you see `invalid_client`: the fingerprint shown under the fields must match the public key you uploaded — `openssl pkey -in aso-ads-private.pem -pubout -outform DER | shasum -a 256` (first 16 characters).
+If you see `invalid_client`: the fingerprint shown under the fields must match the public key you uploaded. Check it with `openssl pkey -in aso-ads-private.pem -pubout -outform DER | shasum -a 256` (first 16 characters).
 
-## App Store Connect API — Optional
+## App Store Connect API: Optional
 
 **Unlocks**
 - Pull your current listing (name, subtitle, keywords, description, What's New) for every language.
@@ -56,10 +56,10 @@ If you see `invalid_client`: the fingerprint shown under the fields must match t
 **How to get it:**
 1. [App Store Connect](https://appstoreconnect.apple.com/access/integrations/api) → **Users and Access → Integrations → App Store Connect API → Team Keys**.
 2. Generate a key with the **App Manager** role (Developer is enough if you only want to read).
-3. Download the `.p8` file — Apple lets you download it only once — and copy the **Key ID** and the **Issuer ID** shown above the table.
+3. Download the `.p8` file (Apple lets you download it only once) and copy the **Key ID** and the **Issuer ID** shown above the table.
 4. In ASO Workbench: fill Key ID and Issuer ID, choose the `.p8` file, press **Save**. Individual keys are not supported.
 
-## OpenRouter — Optional
+## OpenRouter: Optional
 
 **Unlocks**
 - The AI metadata writer, *Make better*, *Write all locales*, *What's New* for every language.
@@ -75,13 +75,13 @@ If you see `invalid_client`: the fingerprint shown under the fields must match t
 
 **How to get it:** create an account at [openrouter.ai](https://openrouter.ai), add a little credit, **Keys → Create key**, paste it (starts with `sk-or-v1-`) and press **Save**. Pick the writer model under the key field.
 
-## RevenueCat — Optional
+## RevenueCat: Optional
 
 **Unlocks:** MRR, active subscriptions, 28-day revenue, new customers and trials on Overview, with daily history.
 
 **How to get it:** RevenueCat → your project → **Project settings → API keys → + New secret API key**, API version **2**, **read-only** permissions. Paste one key per line (one per project). Apps are matched to projects by bundle ID.
 
-## Apple Ads website session — Advanced, optional
+## Apple Ads website session: Advanced, optional
 
 **Unlocks:** Apple's exact popularity index for any term, including terms missing from the monthly lists (these show `Apple · index`).
 

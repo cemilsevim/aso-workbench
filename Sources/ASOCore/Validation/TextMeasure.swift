@@ -17,7 +17,7 @@ public struct TextMeasure: Sendable, Hashable {
     /// True when the text is unambiguously within `limit` under every counting rule.
     public func fits(_ limit: Int) -> Bool { codePoints <= limit && utf8Bytes <= limit }
 
-    /// True when at least one counting rule exceeds the limit but not all — the user must decide.
+    /// True when at least one counting rule exceeds the limit but not all, the user must decide.
     public func isAmbiguous(_ limit: Int) -> Bool {
         (codePoints <= limit) != (utf8Bytes <= limit)
     }

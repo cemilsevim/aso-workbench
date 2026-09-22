@@ -29,7 +29,7 @@ struct MetadataValidatorTests {
         #expect(MetadataValidator.hasErrors(issues))
     }
 
-    @Test("Only exact duplicates are reported — no stemming (Flow vs flower)")
+    @Test("Only exact duplicates are reported, no stemming (Flow vs flower)")
     func noStemming() {
         let fields = MetadataFields(name: "Flow", subtitle: "Focus timer", keywords: "flower,timer,focus,timer")
         let issues = MetadataValidator.validate(fields)

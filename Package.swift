@@ -1,5 +1,5 @@
 // swift-tools-version: 6.2
-// ASO Workbench — native macOS App Store Optimization workspace.
+// ASO Workbench: native macOS App Store Optimization workspace.
 //
 // Layering (compile-time enforced by SwiftPM targets):
 //   ASOCore       pure domain: models, provider contracts, validation, analysis. No Foundation networking, no UI.

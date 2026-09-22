@@ -2,6 +2,8 @@
 
 > **In one sentence:** popularity is *how many people search a phrase*, difficulty is *how hard it is to reach page one for it*. ASO Workbench takes popularity from Apple wherever Apple publishes it, and only fills the gaps with a model it labels as an estimate.
 
+> **Where the estimate comes from:** we trained it ourselves. About 55,800 search terms from five countries were labelled with Apple's real popularity. Each term was described with public clues only: autocomplete, search results and **Jev** (TypeSafe Jev, a small classification model reached through OpenRouter, which answers questions like "is this a brand?" or "does this sound like real demand?" with probabilities). Two small CreateML models learned Apple's answer from those clues and ship inside the app. The whole process is in [The model, step by step](#the-model-step-by-step).
+
 - [Why this is harder than it sounds](#why-this-is-harder-than-it-sounds)
 - [The four layers](#the-four-layers)
 - [The model, step by step](#the-model-step-by-step)
@@ -15,7 +17,7 @@
 
 ## Why this is harder than it sounds
 
-Apple is the only party that knows how often a phrase is searched. It shares a **1–100 "Search Popularity"** score through Apple Ads — but not for everything:
+Apple is the only party that knows how often a phrase is searched. It shares a **1–100 "Search Popularity"** score through Apple Ads, but not for everything:
 
 1. **The monthly lists stop at the top.** Apple's *Search Term Rank* report lists roughly the top 500 terms per genre and country. The lowest score on those lists is usually around 40–50.
 2. **Below that, everything is 5.** Since 29 September 2025 Apple reports **5** for every term below its published range. In the US the number of terms scoring above 5 fell by about three quarters in four days. So in Apple's own numbers there is nothing between 6 and ~31: a term is either "5" or "32 and up".
@@ -44,9 +46,9 @@ Think of it as teaching a student to guess popularity by looking at the same clu
 
 About 55,800 terms across five storefronts (US, GB, DE, FR, TR), from three places:
 
-- Apple's genre lists (15 genres × ~500 terms per country) — they come *with* Apple's score;
-- Apple Ads keyword suggestions seeded with real apps — mostly long-tail terms;
-- App Store autocomplete, expanded from seeds — what people start typing.
+- Apple's genre lists (15 genres × ~500 terms per country), which come *with* Apple's score;
+- Apple Ads keyword suggestions seeded with real apps, mostly long-tail terms;
+- App Store autocomplete expanded from seeds: what people start typing.
 
 ### 2. Label them with Apple's answer
 
@@ -68,8 +70,8 @@ No clue uses Apple's popularity, so the model can run on any term in any country
 
 ### 4. Train two small models (CreateML boosted trees)
 
-1. **Classifier:** *is this term in Apple's published range (≥ 30)?* — the most important question, because most terms are not.
-2. **Regressor:** *if it is, what number?* — trained only on published-range terms.
+1. **Classifier:** *is this term in Apple's published range (≥ 30)?* This is the most important question, because most terms are not.
+2. **Regressor:** *if it is, what number?* Trained only on published-range terms.
 
 At run time a value is shown only when the classifier is at least 65% sure; otherwise the cell says the term is below the range.
 
@@ -77,13 +79,15 @@ At run time a value is shown only when the classifier is at least 65% sure; othe
 
 The two models are compiled into the app (`Resources/models/*.mlmodel`, about 2 MB). Nobody has to train anything; every user gets the same estimates.
 
+At run time the app gathers the same clues for your own terms, including Jev's answers. That is why the estimate layer needs an OpenRouter key: without Jev the model would be missing its most useful clues, so the app shows the "< N" bound instead of a weaker guess.
+
 ## How good is it?
 
 Measured on terms the model never saw during training (model of 19 September 2026, 44,658 training rows):
 
 | Test | Rank agreement (Spearman) | Mean error | Within one band |
 |---|---|---|---|
-| Terms with autocomplete clues — what the app sees in real use (578 held out) | **0.74** | **10.4 points** | 81% |
+| Terms with autocomplete clues: what the app sees in real use (578 held out) | **0.74** | **10.4 points** | 81% |
 | Random 20% of all terms | 0.45 | 15.6 | 75% |
 | A whole country the model never saw (TR) | 0.37 | 17.2 | 71% |
 | A whole topic the model never saw (Games / Productivity / Health) | 0.27–0.35 | 20–30 | 44–63% |
@@ -96,11 +100,11 @@ Measured on terms the model never saw during training (model of 19 September 202
 
 Apple's floor (5) covers most of the long tail. To order those terms, ASO Workbench takes the classifier's probability that a term has published-range demand and places it among the floor terms of the test set, in 24 equal slots:
 
-- **6** — weaker than almost every floor term;
-- **18** — about the middle of floor terms;
-- **29** — stronger than almost every floor term (close to being published).
+- **6**: weaker than almost every floor term;
+- **18**: about the middle of floor terms;
+- **29**: stronger than almost every floor term (close to being published).
 
-It is a **rank among floor terms**, not an Apple number, and it never goes above 29 — Apple owns 30 and up.
+It is a **rank among floor terms**, not an Apple number, and it never goes above 29: Apple owns 30 and up.
 
 ## Difficulty
 
@@ -138,7 +142,7 @@ Difficulty is an estimate of competition, **not** a probability of ranking. The 
 
 Only needed if you want to extend the model (more countries, fresher labels). Normal use never requires it.
 
-1. `make lab` — builds the app and launches it with the developer **Lab** (a *Popularity model* item appears in the sidebar and `asoworkbench://lab/…` URL commands are accepted). Without `ASO_LAB=1` the Lab is hidden and URL commands are ignored.
+1. `make lab` builds the app and launches it with the developer **Lab** (a *Popularity model* item appears in the sidebar and `asoworkbench://lab/…` URL commands are accepted). Without `ASO_LAB=1` the Lab is hidden and URL commands are ignored.
 2. Connect Apple Ads, sign in to the Apple Ads website session and add an OpenRouter key.
 3. In the Lab: choose storefronts → **Run everything** (universe → labels → autocomplete → search results → Jev → train). Every stage resumes where it stopped; Apple's autocomplete throttles bursts, so the autocomplete stage is the slow one.
 4. The report shows the tables above. If it is better than the shipped one, copy `~/Library/Application Support/ASO Workbench/models/*.mlmodel` and `report.json` into `Resources/models/` and rebuild (`make bundle`).

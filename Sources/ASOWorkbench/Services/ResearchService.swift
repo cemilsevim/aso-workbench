@@ -144,7 +144,7 @@ final class ResearchService {
         let (start, end) = AppleAdsPopularityProvider.lastFullMonth(monthsBack: 1)
         if let sf = market.storefront { await classifyKeywords(keywords, app: app, storefront: sf, context: context) }
         do {
-            // Layer 1 — country lists.
+            // Layer 1: country lists.
             let records: [PopularityRecord]
             if let genre {
                 popularityProgress = "Apple Ads · \(genre.displayName) list"
@@ -157,7 +157,7 @@ final class ResearchService {
             let byTerm = Dictionary(grouping: records, by: { $0.searchTerm.lowercased() })
             let missing = keywords.filter { byTerm[$0.normalized] == nil }
 
-            // Layer 2 — dashboard index (browser session) for the misses.
+            // Layer 2: dashboard index (browser session) for the misses.
             var index: [String: Int] = [:]
             var suggestionNote = ""
             if !missing.isEmpty, session.state.isSignedIn || session.state == .unknown {
@@ -172,7 +172,7 @@ final class ResearchService {
                 }
             }
 
-            // Layer 3 — the published-range floor for everything still missing.
+            // Layer 3: the published-range floor for everything still missing.
             let stillMissing = missing.filter { index[$0.normalized] == nil }
             var floor: Int?
             if !stillMissing.isEmpty {
@@ -180,7 +180,7 @@ final class ResearchService {
                 floor = await publishedFloor(country: market.countryCode, genre: floorGenre, start: start)
             }
 
-            // Layer 4 — model estimate for what is still missing, plus a sub-floor rank for terms Apple leaves at the
+            // Layer 4: model estimate for what is still missing, plus a sub-floor rank for terms Apple leaves at the
             // floor (index below the published range), so 5s can be ordered against each other.
             var estimates: [String: PopularityEstimator.Estimate] = [:]
             let floorTerms = missing.filter { (index[$0.normalized] ?? ModelTrainer.publishedThreshold) < ModelTrainer.publishedThreshold }
@@ -245,11 +245,11 @@ final class ResearchService {
             }
             try? context.save()
             let scope = genre.map { $0.displayName } ?? "all 15 genres"
-            var parts: [String] = ["\(countryHits) of \(keywords.count) keyword(s) are on Apple's \(market.countryCode) lists (\(scope), \(start.formatted(.dateTime.month(.wide).year())))\(genresHit.isEmpty ? "" : " — \(genresHit.sorted().joined(separator: ", "))")."]
+            var parts: [String] = ["\(countryHits) of \(keywords.count) keyword(s) are on Apple's \(market.countryCode) lists (\(scope), \(start.formatted(.dateTime.month(.wide).year())))\(genresHit.isEmpty ? "" : ", \(genresHit.sorted().joined(separator: ", "))")."]
             if globalHits > 0 { parts.append("\(globalHits) have the exact-term index from the Apple Ads dashboard.") }
             if estimated > 0 { parts.append("\(estimated) are model estimates (public signals; shown as “est.”).") }
             if subFloored > 0 { parts.append("\(subFloored) floor term(s) carry an est. 6–29 demand rank (ordering among floor terms only; Apple publishes nothing between 6 and 31).") }
-            if bounded > 0 { parts.append("\(bounded) are below the published range\(floor.map { " (< \($0))" } ?? "")\(session.state.isSignedIn ? "" : " — sign in to the Apple Ads dashboard (Connections) for exact values").") }
+            if bounded > 0 { parts.append("\(bounded) are below the published range\(floor.map { " (< \($0))" } ?? "")\(session.state.isSignedIn ? "" : ", sign in to the Apple Ads dashboard (Connections) for exact values").") }
             lastPopularityMessage = parts.joined(separator: " ") + suggestionNote
         } catch {
             lastPopularityMessage = error.localizedDescription

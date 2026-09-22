@@ -75,7 +75,7 @@ struct TrainingView: View {
         GroupBox("Prerequisites") {
             VStack(alignment: .leading, spacing: 6) {
                 LabeledContent("Apple Ads API (genre lists, suggestions)") { ConnectionStateLabel(state: env.adsState) }
-                LabeledContent("Apple Ads dashboard session (labels)") { Text(env.adsSession.state.isSignedIn ? "Signed in" : "Not signed in — labels need it").foregroundStyle(env.adsSession.state.isSignedIn ? .green : .orange) }
+                LabeledContent("Apple Ads dashboard session (labels)") { Text(env.adsSession.state.isSignedIn ? "Signed in" : "Not signed in: labels need it").foregroundStyle(env.adsSession.state.isSignedIn ? .green : .orange) }
                 LabeledContent("OpenRouter (Jev features)") { ConnectionStateLabel(state: env.openRouterState) }
             }
             .font(.callout)
@@ -293,7 +293,7 @@ struct TrainingView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Trained \(r.trainedAt.relativeLabel) on \(r.rowsTrain) rows (\(r.storefronts.joined(separator: ", "))) · features: \(r.featureGroups.joined(separator: ", "))")
                 .font(.callout)
-            Text("Stage 1 — in Apple's published range (≥35)? accuracy \(String(format: "%.0f%%", r.publishedAccuracy * 100)) · precision \(String(format: "%.0f%%", r.publishedPrecision * 100)) · recall \(String(format: "%.0f%%", r.publishedRecall * 100)). Stage 2 — value when it is. Apple's data has nothing between 6 and 34, so the estimate is either “< floor” or a value ≥35.")
+            Text("Stage 1: in Apple's published range (≥35)? accuracy \(String(format: "%.0f%%", r.publishedAccuracy * 100)) · precision \(String(format: "%.0f%%", r.publishedPrecision * 100)) · recall \(String(format: "%.0f%%", r.publishedRecall * 100)). Stage 2: value when it is. Apple's data has nothing between 6 and 34, so the estimate is either “< floor” or a value ≥35.")
                 .font(.caption).foregroundStyle(.secondary)
             evaluation(r.random)
             if let c = r.inferenceLike { evaluation(c) }

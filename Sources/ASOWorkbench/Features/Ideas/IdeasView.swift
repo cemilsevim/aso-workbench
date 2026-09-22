@@ -50,7 +50,7 @@ nonisolated struct IdeaRow: Identifiable, Sendable {
     }
 }
 
-/// Market gaps across the whole store: high Apple popularity, weak results, app-able — independent of any tracked app.
+/// Market gaps across the whole store: high Apple popularity, weak results, app-able, independent of any tracked app.
 struct IdeasView: View {
     @Environment(AppEnvironment.self) private var env
     @Environment(\.modelContext) private var context
@@ -140,7 +140,7 @@ struct IdeasView: View {
                     Text("\(rows.count) shown · \(countryCount) published terms stored for \(country)").font(.callout).foregroundStyle(.secondary)
                 }
             }
-            Text("Every term here has an Apple popularity value (genre lists, last month). Scans measure the long tail first — specific multi-word needs in the 40–60 band — because one-word head terms are always owned by big apps. Jev drops brands, non-searches and things no app can be; the results drop navigational names (top app owns the name) and crowded names. A gap = real demand, an app-shaped need, weak results. ~3 s per measured term; each scan continues where the last stopped.")
+            Text("Every term here has an Apple popularity value (genre lists, last month). Scans measure the long tail first, specific multi-word needs in the 40–60 band, because one-word head terms are always owned by big apps. Jev drops brands, non-searches and things no app can be; the results drop navigational names (top app owns the name) and crowded names. A gap = real demand, an app-shaped need, weak results. ~3 s per measured term; each scan continues where the last stopped.")
                 .font(.caption).foregroundStyle(.tertiary)
         }
         .padding(12)

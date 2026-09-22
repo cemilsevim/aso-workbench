@@ -130,7 +130,7 @@ struct ExpansionSheet: View {
             TableColumn("Keyword", value: \.term) { r in
                 HStack(spacing: 6) {
                     if r.isCandidate { Image(systemName: "star.fill").foregroundStyle(.yellow) }
-                    Text(r.term).lineLimit(1).textSelection(.enabled).help(r.meaning.map { "\(r.term) — \($0)" } ?? r.term)
+                    Text(r.term).lineLimit(1).textSelection(.enabled).help(r.meaning.map { "\(r.term): \($0)" } ?? r.term)
                     if let src = r.sourceTerm { Text("← \(src)").font(.caption2).foregroundStyle(.purple).lineLimit(1) }
                     if r.tracked { Text("tracked").font(.caption2).foregroundStyle(.tertiary) }
                 }

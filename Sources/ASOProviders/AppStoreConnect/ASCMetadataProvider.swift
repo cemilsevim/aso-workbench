@@ -179,7 +179,7 @@ public actor ASCMetadataProvider: MetadataProvider {
     private let assets = HTTPClient(serviceName: "App Store assets", allowedHosts: [], allowedHostSuffixes: [".mzstatic.com", ".apple.com"])
 
     /// Copies every screenshot set of one version localization to another (download the rendered original, upload it
-    /// again — Apple has no copy call). Existing sets on the target are left alone.
+    /// again: Apple has no copy call). Existing sets on the target are left alone.
     public func copyScreenshots(fromLocalization source: String, toLocalization target: String, progress: (@Sendable (String) -> Void)? = nil) async throws -> ScreenshotCopyReport {
         var report = ScreenshotCopyReport()
         let sourceSets = try await list("/v1/appStoreVersionLocalizations/\(source)/appScreenshotSets?limit=50")

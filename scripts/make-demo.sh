@@ -14,7 +14,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/docs/media"; mkdir -p "$OUT"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 
-# 1. mp4 — H.264 at a bitrate that suits screen recordings (mostly still text), so a minute stays under ~10 MB.
+# 1. mp4: H.264 at a bitrate that suits screen recordings (mostly still text), so a minute stays under ~10 MB.
 #    Only video and sound are copied; location, device and other metadata of the recording are not.
 cat > "$TMP/encode.swift" <<'SWIFT'
 import AVFoundation
@@ -107,7 +107,7 @@ SWIFT
 DURATION="$(swift "$TMP/frames.swift" "$SRC" "$SECS" "$WIDTH" "$FPS" "$TMP")"
 cp "$TMP/f00000.png" "$OUT/demo-poster.png"
 
-# 3. gif — one shared palette keeps it small and flicker-free
+# 3. gif: one shared palette keeps it small and flicker-free
 python3 - "$TMP" "$OUT/demo.gif" "$FPS" <<'PY'
 import sys, glob
 from PIL import Image

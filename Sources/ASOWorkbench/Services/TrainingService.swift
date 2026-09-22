@@ -105,7 +105,7 @@ final class TrainingService {
             var waited = 0
             while !session.state.isSignedIn, waited < 3600, !Task.isCancelled {
                 if await session.checkSession() { break }
-                if waited == 0 { append("Labels need the Apple Ads dashboard session — sign in (Connections → Sign in…); the pipeline continues automatically.") }
+                if waited == 0 { append("Labels need the Apple Ads dashboard session, sign in (Connections → Sign in…); the pipeline continues automatically.") }
                 try? await Task.sleep(for: .seconds(20))
                 waited += 20
             }
@@ -193,7 +193,7 @@ final class TrainingService {
         stats = s
     }
 
-    // MARK: Stage 1 — term universe
+    // MARK: Stage 1: term universe
 
     func buildUniverse(storefronts: [String], useGenreLists: Bool, useSuggestions: Bool, hintSeedLimit: Int, apps: [TrackedApp], context: ModelContext) {
         run("Universe") { [self] progress in
@@ -225,7 +225,7 @@ final class TrainingService {
                 if useGenreLists, await popularity.isConfigured {
                     if universeIsDone(sf, "genre") {
                         seeds = (try? context.fetch(FetchDescriptor<TrainingRow>())).map { $0.filter { $0.storefront == sf && $0.source.hasPrefix("genre_list:") }.map { $0.normalized.split(separator: " ").first.map(String.init) ?? $0.normalized } } ?? []
-                        append("\(sf): genre lists already fetched — skipped")
+                        append("\(sf): genre lists already fetched, skipped")
                     } else {
                         var done = 0
                         for genre in AppleAdsGenre.allCases {
@@ -332,7 +332,7 @@ final class TrainingService {
         return f
     }
 
-    // MARK: Stage 2 — labels
+    // MARK: Stage 2: labels
 
     func labelRows(context: ModelContext) {
         run("Labels") { [self] progress in
@@ -383,7 +383,7 @@ final class TrainingService {
         return try? await session.popularity(terms: terms, storefront: storefront)
     }
 
-    // MARK: Stage 3 — public features
+    // MARK: Stage 3: public features
 
     private var hintsDone = 0
 
@@ -444,7 +444,7 @@ final class TrainingService {
         }
     }
 
-    // MARK: Stage 4 — Jev
+    // MARK: Stage 4: Jev
 
     func collectJev(limit: Int, context: ModelContext) {
         run("Jev features") { [self] progress in

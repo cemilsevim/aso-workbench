@@ -37,7 +37,7 @@ struct ApplyAllSheet: View {
             GroupBox("Version") {
                 HStack(spacing: 10) {
                     if loading { ProgressView().controlSize(.small); Text("Reading versions…").foregroundStyle(.secondary) }
-                    else if let v = editable { Label("v\(v.versionString) · \(v.state) — editable", systemImage: "checkmark.circle.fill").foregroundStyle(.green) }
+                    else if let v = editable { Label("v\(v.versionString) · \(v.state): editable", systemImage: "checkmark.circle.fill").foregroundStyle(.green) }
                     else {
                         Label("No editable version: the live one cannot take new metadata.", systemImage: "exclamationmark.triangle.fill").foregroundStyle(.orange)
                         TextField("New version (e.g. 1.3.0)", text: $newVersion).textFieldStyle(.roundedBorder).frame(width: 160)

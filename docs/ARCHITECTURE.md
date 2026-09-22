@@ -4,16 +4,16 @@ ASO Workbench is a native macOS app written in Swift 6.2 and SwiftUI, built as a
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ ASOWorkbench — the app (SwiftUI, SwiftData, CoreML, WebKit)   │
-│   Features/  screens        Services/  jobs & state           │
-│   Persistence/ data model   DesignSystem/ shared pieces       │
+│ ASOWorkbench: the app (SwiftUI, SwiftData, CoreML, WebKit)   │
+│   Features/  screens        Services/  jobs and state        │
+│   Persistence/ data model   DesignSystem/ shared pieces      │
 ├──────────────────────────────────────────────────────────────┤
-│ ASOProviders — talking to the outside world                  │
-│   iTunes Search · autocomplete · reviews · Apple Ads ·        │
-│   App Store Connect · OpenRouter · RevenueCat · HTTP client   │
+│ ASOProviders: talking to the outside world                   │
+│   iTunes Search · autocomplete · reviews · Apple Ads ·       │
+│   App Store Connect · OpenRouter · RevenueCat · HTTP client  │
 ├──────────────────────────────────────────────────────────────┤
-│ ASOCore — pure logic: no network, no UI, fully unit-tested    │
-│   models · rules · difficulty · diffs · features · versions   │
+│ ASOCore: pure logic, no network, no UI, fully unit-tested    │
+│   models · rules · difficulty · diffs · features · versions  │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -76,7 +76,7 @@ Everything is stored as **dated observations** that are added, never overwritten
 
 - `AppEnvironment` builds every service once and hands them to views through `@Environment`. Services are `@Observable`; views read their `progress`, `isBusy` and `lastMessage` and never call the network themselves.
 - The app target compiles with `defaultIsolation(MainActor.self)`: views, services and SwiftData work on the main actor; value types that cross actors are `nonisolated` and `Sendable`; network providers are `actor`s or `Sendable` structs.
-- Long jobs share one shape — `Progress { step, completed, total, isRunning }` plus `cancel()` — so every screen shows progress the same way and every job can be stopped and resumed.
+- Long jobs share one shape, `Progress { step, completed, total, isRunning }` plus `cancel()`, so every screen shows progress the same way and every job can be stopped and resumed.
 
 ## Screens and patterns
 
@@ -85,8 +85,6 @@ Everything is stored as **dated observations** that are added, never overwritten
 - Busy toolbars become a few labelled menus (Keywords: **Add · Update · Export**; Metadata: **Write · Publish · Baseline**), each menu saying what it will do.
 - Every number carries a `SourceBadge`; empty states are `ContentUnavailableView`s that say what to do next.
 - Keyboard shortcuts live in the menu bar (`.commands`) and reach views through notifications, so each shortcut is defined once.
-
-A longer, Turkish walkthrough of these SwiftUI patterns is in [docs/tr/swiftui-altyapi-rehberi.md](tr/swiftui-altyapi-rehberi.md).
 
 ## Adding things
 

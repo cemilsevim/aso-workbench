@@ -8,7 +8,7 @@ enum PersistenceController {
         MetadataSnapshotRecord.self, MetadataDraftRecord.self, ChangeLogEntry.self, TrainingRow.self, IdeaCandidate.self, ReleaseMarker.self, RatingObservation.self, ReviewRecord.self, AdsKeywordStat.self, RevenueSnapshot.self,
     ])
 
-    /// `~/Library/Application Support/ASO Workbench/` — data, keys, log, trained models and backups.
+    /// `~/Library/Application Support/ASO Workbench/`, data, keys, log, trained models and backups.
     /// Resolved once per launch. The app was called "ASO Studio" before 1.0.0; its folder is renamed in place the first
     /// time (a same-volume rename, nothing is copied), so data, keys and history carry over.
     nonisolated static let supportDirectory: URL = {
@@ -23,7 +23,7 @@ enum PersistenceController {
         return dir
     }()
 
-    /// `store.sqlite` in the support folder — a plain SQLite file the user can back up or inspect.
+    /// `store.sqlite` in the support folder: a plain SQLite file the user can back up or inspect.
     nonisolated static var storeURL: URL { supportDirectory.appendingPathComponent("store.sqlite") }
 
     /// Settings saved under the old bundle identifier are copied once, so preferences survive the rename.

@@ -89,7 +89,7 @@ public enum StorefrontRegistry {
 
     private static let byCode: [String: Storefront] = Dictionary(uniqueKeysWithValues: all.map { ($0.countryCode, $0) })
 
-    /// Exact lookup by ISO country code. Returns nil for unknown codes — callers
+    /// Exact lookup by ISO country code. Returns nil for unknown codes, callers
     /// must surface that instead of defaulting to another market.
     public static func lookup(_ countryCode: String) -> Storefront? {
         byCode[countryCode.uppercased()]

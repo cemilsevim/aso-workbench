@@ -7,7 +7,7 @@ import ASOCore
 ///
 /// This is the number the Apple Ads web console shows; it is not part of the documented Platform
 /// API. It is read through the user's own signed-in browser session inside a WebKit view, so the
-/// app never sees or stores the password. The endpoint is undocumented and may change — when it
+/// app never sees or stores the password. The endpoint is undocumented and may change, when it
 /// does, the documented layers (country lists, published-range bound) keep working.
 @Observable
 final class AppleAdsSessionService: NSObject {

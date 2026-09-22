@@ -17,7 +17,7 @@ public enum TitleMatch {
     }
 
     /// True when the top result's name and the term are the same name (one starts with the other, spacing aside):
-    /// the search is navigational — people want that app, not a category.
+    /// the search is navigational, people want that app, not a category.
     public static func namesAlign(leader: String, term: String) -> Bool {
         let a = compact(leader), b = compact(term)
         guard a.count >= 4, b.count >= 4 else { return false }

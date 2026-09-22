@@ -61,7 +61,7 @@ struct RatingsCard: View {
                     }
                 }
                 if let latest = app.reviews.sorted(by: { ($0.date ?? $0.fetchedAt) > ($1.date ?? $1.fetchedAt) }).first {
-                    Text("Latest written review: \(StorefrontRegistry.lookup(latest.countryCode)?.name ?? latest.countryCode) · \(latest.rating)★ “\(latest.title)” · \((latest.date ?? latest.fetchedAt).relativeLabel) — \(app.reviews.count) stored, see Reviews.")
+                    Text("Latest written review: \(StorefrontRegistry.lookup(latest.countryCode)?.name ?? latest.countryCode) · \(latest.rating)★ “\(latest.title)” · \((latest.date ?? latest.fetchedAt).relativeLabel): \(app.reviews.count) stored, see Reviews.")
                         .font(.callout).foregroundStyle(.secondary).lineLimit(2)
                 }
                 if !rows.isEmpty {

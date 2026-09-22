@@ -7,7 +7,7 @@ DerivedData/
 *.xcodeproj
 *.xcworkspace
 
-# Secrets — never commit keys, sessions or personal data
+# Secrets: never commit keys, sessions or personal data
 .env
 .env.*
 *.p8

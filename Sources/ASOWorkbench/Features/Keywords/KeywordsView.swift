@@ -429,13 +429,13 @@ struct KeywordsView: View {
             Menu {
                 let all = market.map { Set($0.keywords.map(\.persistentModelID)) } ?? []
                 let busy = env.tracking.progress.isRunning || env.research.isLoadingPopularity
-                Section("Ranks — public App Store search, ~3 s per keyword") {
+                Section("Ranks: public App Store search, ~3 s per keyword") {
                     Button("Measure all \(all.count) keywords   ⌘R") { if let market { measure(ids: all, market) } }
                         .disabled(all.isEmpty || busy)
                     Button((selection.isEmpty ? "Measure selected keywords" : "Measure \(selection.count) selected") + "   ⇧⌘R") { if let market { measure(ids: selection, market) } }
                         .disabled(selection.isEmpty || busy)
                 }
-                Section(env.adsState.isUsable ? "Popularity — Apple Ads, a few seconds" : "Popularity — connect Apple Ads first (Connections)") {
+                Section(env.adsState.isUsable ? "Popularity: Apple Ads, a few seconds" : "Popularity: connect Apple Ads first (Connections)") {
                     Button("Refresh popularity for all \(all.count)   ⇧⌘P") { refreshPopularity(all) }
                         .disabled(!env.adsState.isUsable || all.isEmpty || busy)
                     Button(selection.isEmpty ? "Refresh popularity for selected" : "Refresh popularity for \(selection.count) selected") { refreshPopularity(selection) }
@@ -448,7 +448,7 @@ struct KeywordsView: View {
                     .labelStyle(.titleAndIcon)
             }
             .disabled(market == nil || market?.keywords.isEmpty == true)
-            .help("Measure ranks or refresh popularity — for every keyword or only the selected ones")
+            .help("Measure ranks or refresh popularity, for every keyword or only the selected ones")
             Button { export() } label: { Label("Export CSV", systemImage: "square.and.arrow.up") }
                 .disabled(rows.isEmpty)
                 .help("Save this market's keywords with ranks, popularity and difficulty as a CSV file (⇧⌘E)")
@@ -492,7 +492,7 @@ struct KeywordsView: View {
 
     static func difficultyHelp(_ d: DifficultyScore) -> String {
         """
-        Difficulty \(d.rounded)/100 (\(d.tier)) — estimated from the top \(d.sampleSize) public results, not a probability of ranking.
+        Difficulty \(d.rounded)/100 (\(d.tier)): estimated from the top \(d.sampleSize) public results, not a probability of ranking.
         \(d.components.map { "\($0.name) \(Int($0.value.rounded()))" }.joined(separator: " · "))
         """
     }
@@ -596,7 +596,7 @@ struct PopularityCell: View {
                     Text("est.\(o.confidence.map { String(format: " %.0f%%", $0 * 100) } ?? "")").font(.caption).foregroundStyle(.tertiary)
                 }
                 .help(o.value == nil
-                      ? "Model estimate: probably below Apple's published range (no number exists there — Apple's data has nothing between 6 and 34). The percentage is the model's confidence."
+                      ? "Model estimate: probably below Apple's published range (no number exists there: Apple's data has nothing between 6 and 34). The percentage is the model's confidence."
                       : "Model estimate from public signals (autocomplete, search results, Jev). Apple has no number for this term. The percentage is the probability that the term has published-range demand; the value is capped below Apple's list floor\(o.upperBound.map { " (< \($0))" } ?? "").")
             } else if o.scope == "global", let v = o.value {
                 HStack(spacing: 6) {

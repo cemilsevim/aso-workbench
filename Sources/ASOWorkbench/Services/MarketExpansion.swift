@@ -3,8 +3,8 @@ import SwiftData
 import ASOCore
 import ASOProviders
 
-/// Tries an app's own keywords in other storefronts in one pass — rank, Apple popularity (list → index → estimate),
-/// difficulty and Jev language fit per country — so promising markets can be tracked with one click instead of
+/// Tries an app's own keywords in other storefronts in one pass, rank, Apple popularity (list → index → estimate),
+/// difficulty and Jev language fit per country, so promising markets can be tracked with one click instead of
 /// adding keywords one by one.
 @Observable
 final class MarketExpansion {
@@ -66,13 +66,13 @@ final class MarketExpansion {
 
     nonisolated struct LocalForm: Sendable { let term: String; let source: String; let meaning: String }
 
-    /// Asks the model how people in `storefront` actually search for what each term means — local search phrasing, not
-    /// dictionary translation — with the app's description as context so the meaning survives. One call per storefront.
+    /// Asks the model how people in `storefront` actually search for what each term means, local search phrasing, not
+    /// dictionary translation: with the app's description as context so the meaning survives. One call per storefront.
     func localForms(of terms: [String], app: TrackedApp, storefront sf: Storefront) async -> [LocalForm] {
         guard await llm.isConfigured else { return [] }
         let language = sf.defaultLocale.displayName
         let system = """
-        You are an App Store search localization specialist. For each source keyword, give how people in the target country actually type that need into App Store search, in the store language: 1 to 3 short phrases, lower-case, no punctuation, at most 4 words, real search phrasing (what a person types, not marketing copy). Preserve the meaning of the source keyword — same need, same intent. If locals commonly search this need with the English words, say so by returning the English phrase as one candidate. Never invent brand names.
+        You are an App Store search localization specialist. For each source keyword, give how people in the target country actually type that need into App Store search, in the store language: 1 to 3 short phrases, lower-case, no punctuation, at most 4 words, real search phrasing (what a person types, not marketing copy). Preserve the meaning of the source keyword, same need, same intent. If locals commonly search this need with the English words, say so by returning the English phrase as one candidate. Never invent brand names.
         Output strict JSON only: {"terms":[{"source":"…","candidates":[{"term":"…","meaning":"short gloss in English"}]}]}
         """
         let user = """
@@ -107,7 +107,7 @@ final class MarketExpansion {
     func clear() { rows = []; lastMessage = nil }
 
     /// `autoTrack`: every measured cell becomes a tracked keyword in that storefront (market created when missing) and
-    /// its rank, results, difficulty and popularity are stored as observations — nothing has to be measured twice.
+    /// its rank, results, difficulty and popularity are stored as observations, nothing has to be measured twice.
     func run(app: TrackedApp, terms: [String], countries: [String], device: DeviceContext, autoTrack: Bool = false, sourceMarket: TrackedMarket? = nil,
              catalog: CatalogService? = nil, context: ModelContext? = nil, localize: Bool = false) {
         guard !progress.isRunning else { return }
@@ -231,7 +231,7 @@ final class MarketExpansion {
             }
         }
         if let context { try? context.save() }
-        lastMessage = "\(terms.count) keyword(s) × \(countries.count) storefront(s): \(candidates) candidate cell(s) — Apple-level demand (≥ 30) with a top-30 rank or difficulty ≤ 45, in a language people search there." + (autoTrack ? " \(trackedCount) cell(s) tracked with their measurements; see Keywords in each storefront." : "")
+        lastMessage = "\(terms.count) keyword(s) × \(countries.count) storefront(s): \(candidates) candidate cell(s): Apple-level demand (≥ 30) with a top-30 rank or difficulty ≤ 45, in a language people search there." + (autoTrack ? " \(trackedCount) cell(s) tracked with their measurements; see Keywords in each storefront." : "")
         AppLog.write("[expand] \(lastMessage ?? "")")
         for r in rows.sorted(by: { ($0.opportunity ?? -1) > ($1.opportunity ?? -1) }).prefix(40) {
             AppLog.write("[expand] \(r.isCandidate ? "★" : " ") \(r.country)\(r.sourceTerm.map { " [from \($0)]" } ?? "") \(r.term) rank=\(r.rank.map { "#\($0)" } ?? ">\(r.observed)") pop=\(r.popularity ?? 0) \(r.popularityScope ?? "") diff=\(Int((r.difficulty ?? 0).rounded())) lang=\(String(format: "%.2f", r.languageFit ?? -1)) leader=\(r.leader ?? "-")")
