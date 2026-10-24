@@ -98,7 +98,7 @@ aso connections verify apple-ads
 aso connections remove openrouter
 ```
 
-Keys are checked before they are stored (identifiers present, private keys parsed as P-256 keys). They live in `credentials.json` in the data folder, in the same shape the macOS app writes, readable only by your user (folder 0700, file 0600 where the system has POSIX permissions), and each goes only to its own service. This version stores and tests them; the features that use them (popularity, publishing, the writer, revenue) come to the command line in later versions.
+Keys are checked before they are stored (identifiers present, private keys parsed as P-256 keys). They live in `credentials.json` in the data folder, in the same shape the macOS app writes, readable only by your user (folder 0700 and file 0600 on macOS and Linux; on Windows the contents are encrypted with DPAPI for your Windows account, so the file is useless to other accounts and on other computers), and each goes only to its own service. This version stores and tests them; the features that use them (popularity, publishing, the writer, revenue) come to the command line in later versions.
 
 ## Data
 
