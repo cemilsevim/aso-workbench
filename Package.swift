@@ -60,12 +60,17 @@ let package = Package(
         ),
         .target(
             name: "CSQLite",
-            linkerSettings: [.linkedLibrary("sqlite3")]
+            linkerSettings: [
+                .linkedLibrary("sqlite3", .when(platforms: [.macOS, .linux])),
+                .linkedLibrary("winsqlite3", .when(platforms: [.windows])),
+            ]
         ),
         .target(
             name: "ASOEngine",
             dependencies: ["ASOCore", "ASOProviders", "CSQLite"],
-            swiftSettings: [.swiftLanguageMode(.v6)]
+            swiftSettings: [.swiftLanguageMode(.v6)],
+            // DPAPI (CryptProtectData) for the key file on Windows.
+            linkerSettings: [.linkedLibrary("crypt32", .when(platforms: [.windows]))]
         ),
         .target(
             name: "ASOCommands",
